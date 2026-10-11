@@ -2,6 +2,20 @@
 
 모든 명령은 `k8s/install` 디렉터리에서 실행한다.
 
+## 실행 전 SSH 변수 설정
+
+관리 호스트의 사용자명과 개인키 경로를 환경변수로 지정할 수 있다. 지정하지
+않으면 `K8S_SSH_USER`는 `groom`, `K8S_SSH_KEY`는 현재 사용자의
+`$HOME/.ssh/k8s_ed25519`를 사용한다.
+
+```bash
+export K8S_SSH_USER="${K8S_SSH_USER:-groom}"
+export K8S_SSH_KEY="${K8S_SSH_KEY:-$HOME/.ssh/k8s_ed25519}"
+```
+
+`install/inventory/hosts.yml`은 같은 변수를 사용하므로, 환경변수를 설정한
+터미널에서 Ansible 명령을 실행해야 한다.
+
 ## 01. 사전 점검
 
 변경 없이 OS, 자원, Python, swap, hostname, NTP, sudo를 확인한다.
@@ -124,8 +138,8 @@ Control Plane에서 관리 사용자용 kubeconfig를 복사한다.
 ```bash
 mkdir -p ~/.kube
 
-scp -i /Users/jarrod/.ssh/k8s_ed25519 \
-  groom@10.10.10.150:/home/groom/.kube/config \
+scp -i "$K8S_SSH_KEY" \
+  "$K8S_SSH_USER@10.10.10.150:/home/$K8S_SSH_USER/.kube/config" \
   ~/.kube/k8s-config
 
 chmod 600 ~/.kube/k8s-config

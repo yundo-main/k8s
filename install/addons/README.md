@@ -7,7 +7,7 @@ Ansible Playbook을 사용한다. 이 문서는 Addon별 선행조건과 검증 
 ## 1. 기본 클러스터 확인
 
 ```bash
-export KUBECONFIG=/Users/jarrod/.kube/k8s-config
+export KUBECONFIG="$HOME/.kube/k8s-config"
 kubectl get nodes -o wide
 kubectl get pods -A
 kubectl get --raw='/readyz?verbose'
