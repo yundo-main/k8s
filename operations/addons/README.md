@@ -1,10 +1,13 @@
 # 운영 Addon 자료
 
-Addon과 운영 영역의 관계는 [Addon과 Operations 이론 페이지](../addons-operations.md)에서
+Addon은 Operations의 하위 운영 영역이다. 전체 관계는
+[Operations 이론](../operations-theory.md)에서
 먼저 확인한다.
 
 컨트롤러는 Kubernetes 오브젝트를 감시하고 선언된 원하는 상태가 실제 상태가
 되도록 조정하는 구성 요소다.
+
+![Operations와 Addon 하위 영역](./addon-operations-boundary.svg)
 
 ```text
 k8s/operations/addons/

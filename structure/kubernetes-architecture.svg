@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="13.333in" height="7.5in" preserveAspectRatio="xMidYMid meet" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Helvetica,Arial,sans-serif">
+  <title>Kubernetes 클러스터 내부 구성</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .frame   { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.6; }
+      .title   { font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .cp      { fill: #eaf2fb; stroke: #326ce5; stroke-width: 1.6; }
+      .wk      { fill: #edf8f0; stroke: #2e8b57; stroke-width: 1.6; }
+      .group   { font-size: 15px; font-weight: 700; }
+      .g-cp    { fill: #1d4ed8; }
+      .g-wk    { fill: #1f6f43; }
+      .card    { fill: #ffffff; stroke-width: 1.4; }
+      .c-cp    { stroke: #326ce5; }
+      .c-db    { stroke: #d97706; }
+      .c-wk    { stroke: #2e8b57; }
+      .name    { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .tag     { font-size: 11px; fill: #64748b; }
+      .desc    { font-size: 12.5px; fill: #1e293b; }
+      .sec     { font-size: 11.5px; fill: #b45309; }
+      .pod     { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.2; }
+      .ctr     { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1; }
+      .podtxt  { font-size: 11.5px; font-weight: 700; fill: #334155; text-anchor: middle; }
+      .ctrtxt  { font-size: 11px; fill: #1d4ed8; text-anchor: middle; }
+      .edge    { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#arr); }
+      .edge2   { stroke: #475569; stroke-width: 1.6; fill: none; marker-start: url(#arr); marker-end: url(#arr); }
+      .elbl    { font-size: 11px; fill: #475569; paint-order: stroke; stroke: #ffffff; stroke-width: 4; }
+      .note    { font-size: 11.5px; fill: #475569; }
+    </style>
+  </defs>
+
+  <!-- 클러스터 프레임 -->
+  <rect x="20" y="15" width="960" height="630" rx="16" class="frame"/>
+  <text x="40" y="46" class="title">Kubernetes Cluster</text>
+  <text x="40" y="61" class="note">Control Plane의 조정과 Worker Node의 Pod 실행 흐름</text>
+
+  <!-- Control Plane -->
+  <rect x="40" y="72" width="920" height="258" rx="10" class="cp"/>
+  <text x="56" y="96" class="group g-cp">Control Plane</text>
+
+  <!-- kube-apiserver -->
+  <rect x="60" y="110" width="208" height="176" rx="8" class="card c-cp"/>
+  <text x="74" y="134" class="name">kube-apiserver</text>
+  <text x="74" y="150" class="tag">단일 진입점</text>
+  <text x="74" y="172" class="desc">모든 요청의 단일 진입점</text>
+  <text x="74" y="189" class="desc">인증·인가·어드미션 검증 후</text>
+  <text x="74" y="206" class="desc">상태를 etcd에 기록</text>
+  <text x="74" y="223" class="desc">etcd에 직접 접근하는</text>
+  <text x="74" y="240" class="desc">유일한 구성요소</text>
+  <text x="74" y="272" class="sec">신뢰 경계: 접근·감사 로그 필수</text>
+
+  <!-- etcd -->
+  <rect x="284" y="110" width="208" height="176" rx="8" class="card c-db"/>
+  <text x="298" y="134" class="name">etcd</text>
+  <text x="298" y="150" class="tag">상태 저장소</text>
+  <text x="298" y="172" class="desc">클러스터 상태를 저장하는</text>
+  <text x="298" y="189" class="desc">분산 키-값 저장소</text>
+  <text x="298" y="206" class="desc">Secret을 포함한 전체</text>
+  <text x="298" y="223" class="desc">설정과 상태를 보관</text>
+  <text x="298" y="272" class="sec">저장 시 암호화·접근 통제 필수</text>
+
+  <!-- kube-scheduler -->
+  <rect x="508" y="110" width="208" height="176" rx="8" class="card c-cp"/>
+  <text x="522" y="134" class="name">kube-scheduler</text>
+  <text x="522" y="150" class="tag">배치 결정</text>
+  <text x="522" y="172" class="desc">노드가 없는 Pod를 감시해</text>
+  <text x="522" y="189" class="desc">리소스·어피니티·taint 등</text>
+  <text x="522" y="206" class="desc">조건으로 실행할 노드를</text>
+  <text x="522" y="223" class="desc">선택하고 배정</text>
+
+  <!-- kube-controller-manager -->
+  <rect x="732" y="110" width="208" height="176" rx="8" class="card c-cp"/>
+  <text x="746" y="134" class="name">kube-controller-manager</text>
+  <text x="746" y="150" class="tag">상태 조정</text>
+  <text x="746" y="172" class="desc">현재 상태를 desired state에</text>
+  <text x="746" y="189" class="desc">맞추는 컨트롤러 루프 실행</text>
+  <text x="746" y="206" class="desc">(Node, ReplicaSet,</text>
+  <text x="746" y="223" class="desc">Deployment 등)</text>
+
+  <!-- 컨트롤 플레인 내부 통신 -->
+  <line x1="270" y1="200" x2="282" y2="200" class="edge2"/>
+  <!-- scheduler, controller-manager -> apiserver (API 서버 경유) -->
+  <path d="M612 286 V306 H200 V288" class="edge"/>
+  <path d="M836 286 V306 H612" class="edge" marker-end="none"/>
+  <text x="330" y="304" class="elbl">scheduler / controller-manager는 API 서버를 통해서만 상태 조회·갱신</text>
+
+  <!-- API 서버 <-> kubelet -->
+  <path d="M100 288 V398" class="edge2"/>
+  <text x="112" y="350" class="elbl">watch / 상태 보고 (TLS)</text>
+
+  <!-- Worker Nodes -->
+  <rect x="40" y="366" width="920" height="238" rx="10" class="wk"/>
+  <text x="120" y="390" class="group g-wk">Worker Nodes</text>
+
+  <!-- kubelet -->
+  <rect x="60" y="400" width="208" height="170" rx="8" class="card c-wk"/>
+  <text x="74" y="424" class="name">kubelet</text>
+  <text x="74" y="440" class="tag">노드 에이전트</text>
+  <text x="74" y="462" class="desc">API 서버의 PodSpec을 받아</text>
+  <text x="74" y="479" class="desc">컨테이너 런타임(CRI)으로</text>
+  <text x="74" y="496" class="desc">Pod를 실행하고 상태·헬스를</text>
+  <text x="74" y="513" class="desc">보고</text>
+
+  <!-- kube-proxy -->
+  <rect x="284" y="400" width="208" height="170" rx="8" class="card c-wk"/>
+  <text x="298" y="424" class="name">kube-proxy</text>
+  <text x="298" y="440" class="tag">서비스 네트워킹</text>
+  <text x="298" y="462" class="desc">Service 가상 IP로 들어온</text>
+  <text x="298" y="479" class="desc">트래픽을 Pod로 전달하는</text>
+  <text x="298" y="496" class="desc">노드 네트워크 규칙 관리</text>
+  <text x="298" y="513" class="desc">(iptables / IPVS)</text>
+
+  <!-- Pods -->
+  <rect x="508" y="400" width="432" height="170" rx="8" class="card c-wk"/>
+  <text x="522" y="424" class="name">Pods (컨테이너)</text>
+  <text x="522" y="440" class="tag">워크로드 실행 단위</text>
+  <text x="522" y="462" class="desc">네트워크·스토리지를 공유하는 컨테이너 묶음.</text>
+  <text x="522" y="479" class="desc">컨테이너 런타임(containerd 등)이 실제 실행</text>
+
+  <rect x="522" y="492" width="120" height="64" rx="6" class="pod"/>
+  <text x="582" y="508" class="podtxt">Pod</text>
+  <rect x="534" y="516" width="96" height="30" rx="4" class="ctr"/>
+  <text x="582" y="535" class="ctrtxt">container</text>
+
+  <rect x="656" y="492" width="120" height="64" rx="6" class="pod"/>
+  <text x="716" y="508" class="podtxt">Pod</text>
+  <rect x="668" y="516" width="96" height="30" rx="4" class="ctr"/>
+  <text x="716" y="535" class="ctrtxt">container</text>
+
+  <rect x="790" y="492" width="136" height="64" rx="6" class="pod"/>
+  <text x="858" y="508" class="podtxt">Pod</text>
+  <rect x="800" y="516" width="52" height="30" rx="4" class="ctr"/>
+  <text x="826" y="535" class="ctrtxt">ctr</text>
+  <rect x="862" y="516" width="52" height="30" rx="4" class="ctr"/>
+  <text x="888" y="535" class="ctrtxt">ctr</text>
+
+  <!-- kubelet -> Pods -->
+  <path d="M164 570 V588 H716 V572" class="edge"/>
+  <text x="300" y="586" class="elbl">kubelet이 컨테이너 런타임(CRI)을 통해 Pod 생성·관리</text>
+
+  <text x="40" y="632" class="note">구성요소 간 통신은 TLS로 보호하고, etcd는 API 서버 외 경로의 접근을 차단한다.</text>
+</svg>

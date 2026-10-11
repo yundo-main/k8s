@@ -288,7 +288,7 @@ LimitRange 등을 학습한다.
 
 기본 리소스 학습 이후 다음 영역으로 확장한다.
 
-- [Addon·Operations 이론](../operations/addons-operations.md)
+- [Operations 이론](../operations/operations-theory.md)
 - [Addon 설치 순서](../install/addons/README.md)
 - [운영 Addon 자료](../operations/addons/README.md): CNI, Ingress, Storage, Operator
 - [Operations](../operations/README.md): 클러스터·노드·네트워크·장애 대응

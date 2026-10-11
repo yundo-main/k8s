@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="13.333in" height="7.5in" preserveAspectRatio="xMidYMid meet" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Helvetica,Arial,sans-serif">
+  <title>Kubernetes 핵심 특징과 학습 포인트</title>
+  <defs>
+    <style>
+      .card   { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.4; }
+      .badge  { fill: #326ce5; }
+      .num    { font-size: 13px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .ttl    { font-size: 17px; font-weight: 700; fill: #0f172a; }
+      .head   { font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .d      { font-size: 13px; fill: #1e293b; }
+      .sec    { font-size: 12.5px; fill: #b45309; }
+      .code   { fill: #0f172a; }
+      .ct     { font-size: 12px; fill: #e2e8f0; font-family: Menlo, Consolas, monospace; }
+      .pod    { fill: #e0ecff; stroke: #326ce5; stroke-width: 1.4; stroke-dasharray: 5 3; }
+      .ctr    { fill: #ffffff; stroke: #3b82f6; stroke-width: 1.2; }
+      .ctrt   { font-size: 12px; fill: #1d4ed8; text-anchor: middle; }
+      .podt   { font-size: 12px; font-weight: 700; fill: #1d4ed8; }
+      .chip   { fill: #ffffff; stroke: #326ce5; stroke-width: 1.4; }
+      .chipn  { font-size: 14px; font-weight: 700; fill: #1d4ed8; text-anchor: middle; }
+      .chips  { font-size: 11.5px; fill: #475569; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="720" fill="#ffffff"/>
+  <text x="30" y="42" class="head">Kubernetes 핵심 특징과 학습 포인트</text>
+
+  <!-- 1. 파드 vs 컨테이너 -->
+  <rect x="30" y="70" width="470" height="190" rx="10" class="card"/>
+  <circle cx="58" cy="98" r="14" class="badge"/><text x="58" y="103" class="num">1</text>
+  <text x="82" y="104" class="ttl">파드 vs 컨테이너</text>
+  <text x="50" y="128" class="d">파드(Pod)는 쿠버네티스의 최소 배포 단위</text>
+  <text x="50" y="146" class="d">컨테이너 1개 이상을 묶어 IP와 스토리지를 공유</text>
+  <text x="50" y="164" class="d">컨테이너는 실행 단위, 파드가 이를 감싸 관리</text>
+  <rect x="50" y="182" width="430" height="64" rx="8" class="pod"/>
+  <text x="62" y="199" class="podt">Pod</text>
+  <rect x="150" y="204" width="130" height="28" rx="5" class="ctr"/>
+  <text x="215" y="222" class="ctrt">container A</text>
+  <rect x="300" y="204" width="130" height="28" rx="5" class="ctr"/>
+  <text x="365" y="222" class="ctrt">container B</text>
+
+  <!-- 2. 무중단 서비스 -->
+  <rect x="520" y="70" width="470" height="190" rx="10" class="card"/>
+  <circle cx="548" cy="98" r="14" class="badge"/><text x="548" y="103" class="num">2</text>
+  <text x="572" y="104" class="ttl">무중단 서비스</text>
+  <text x="540" y="128" class="d">Rolling Update로 새 버전 파드를 순차 교체해</text>
+  <text x="540" y="146" class="d">서비스 중단 없이 배포</text>
+  <text x="540" y="164" class="sec">전제: readiness probe 통과 후 트래픽 전환</text>
+  <rect x="540" y="182" width="430" height="64" rx="6" class="code"/>
+  <text x="552" y="199" class="ct">strategy:</text>
+  <text x="552" y="214" class="ct">  type: RollingUpdate</text>
+  <text x="552" y="229" class="ct">  rollingUpdate: {maxUnavailable: 0, maxSurge: 1}</text>
+
+  <!-- 3. 클라우드 벤더 종속성 해결 -->
+  <rect x="30" y="276" width="470" height="170" rx="10" class="card"/>
+  <circle cx="58" cy="304" r="14" class="badge"/><text x="58" y="309" class="num">3</text>
+  <text x="82" y="310" class="ttl">클라우드 벤더 종속성 해결</text>
+  <text x="50" y="334" class="d">CRI·CNI·CSI 표준 인터페이스에 맞춰 구현체를 교체 가능</text>
+  <text x="50" y="352" class="d">lock-in: 호환성 문제로 특정 벤더에 종속되는 현상</text>
+  <text x="50" y="370" class="d">표준을 따르면 벤더 이전 비용을 줄일 수 있음</text>
+  <rect x="50" y="384" width="130" height="50" rx="6" class="chip"/>
+  <text x="115" y="404" class="chipn">CRI</text><text x="115" y="423" class="chips">컨테이너 런타임</text>
+  <rect x="195" y="384" width="130" height="50" rx="6" class="chip"/>
+  <text x="260" y="404" class="chipn">CNI</text><text x="260" y="423" class="chips">네트워크</text>
+  <rect x="340" y="384" width="130" height="50" rx="6" class="chip"/>
+  <text x="405" y="404" class="chipn">CSI</text><text x="405" y="423" class="chips">스토리지</text>
+
+  <!-- 4. 효율적인 자원 사용 -->
+  <rect x="520" y="276" width="470" height="170" rx="10" class="card"/>
+  <circle cx="548" cy="304" r="14" class="badge"/><text x="548" y="309" class="num">4</text>
+  <text x="572" y="310" class="ttl">효율적인 자원 사용</text>
+  <text x="540" y="334" class="d">사용할 CPU·메모리를 미리 지정(requests/limits)</text>
+  <text x="540" y="352" class="d">스케줄러가 여유 있는 노드에 배치하고</text>
+  <text x="540" y="370" class="d">한 파드의 과다 사용을 제한</text>
+  <rect x="540" y="380" width="430" height="56" rx="6" class="code"/>
+  <text x="552" y="396" class="ct">resources:</text>
+  <text x="552" y="411" class="ct">  requests: {cpu: 250m, memory: 128Mi}</text>
+  <text x="552" y="426" class="ct">  limits:   {cpu: 500m, memory: 256Mi}</text>
+
+  <!-- 5. 유연한 확장성 -->
+  <rect x="30" y="462" width="470" height="140" rx="10" class="card"/>
+  <circle cx="58" cy="490" r="14" class="badge"/><text x="58" y="495" class="num">5</text>
+  <text x="82" y="496" class="ttl">유연한 확장성</text>
+  <text x="50" y="520" class="d">파드 수(replicas)를 늘리고 줄이는 수평 확장</text>
+  <text x="50" y="538" class="d">HPA로 부하에 따라 파드 수를 자동 조정</text>
+  <text x="50" y="556" class="d">노드를 추가해 클러스터 용량 확장</text>
+
+  <!-- 6. 애플리케이션의 단순화 -->
+  <rect x="520" y="462" width="470" height="140" rx="10" class="card"/>
+  <circle cx="548" cy="490" r="14" class="badge"/><text x="548" y="495" class="num">6</text>
+  <text x="572" y="496" class="ttl">애플리케이션의 단순화</text>
+  <text x="540" y="520" class="d">서비스 디스커버리·로드밸런싱·설정 관리·</text>
+  <text x="540" y="538" class="d">자가 복구(재시작)를 플랫폼이 제공</text>
+  <text x="540" y="556" class="d">애플리케이션은 비즈니스 로직에 집중</text>
+
+  <!-- 7. 애플리케이션 배포의 가속화 -->
+  <rect x="30" y="590" width="960" height="120" rx="10" class="card"/>
+  <circle cx="58" cy="618" r="14" class="badge"/><text x="58" y="623" class="num">7</text>
+  <text x="82" y="624" class="ttl">애플리케이션 배포의 가속화</text>
+  <text x="50" y="648" class="d">선언형 매니페스트(YAML)와 컨테이너 이미지로 환경 일관성을 확보하고,</text>
+  <text x="50" y="666" class="d">CI/CD와 연계해 반복 가능한 배포를 빠르게 수행</text>
+  <text x="50" y="690" class="sec">보안: 이미지 서명 검증과 정책(OPA/Kyverno) 게이트를 파이프라인에 함께 적용</text>
+</svg>

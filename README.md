@@ -4,13 +4,15 @@
 분리해 관리한다.
 
 - [Kubernetes 실습 순서](./practice-order/README.md)
-- [Addon·Operations 이론](./operations/addons-operations.md)
+- [Kubernetes 기본 구조](./structure/README.md)
+- [Operations 이론](./operations/operations-theory.md)
 
 ## 디렉터리 구조
 
 ```text
 k8s/
 ├── install/         # Lesson 0 Ansible 기반 Kubernetes 설치
+├── structure/       # Kubernetes 기본 구성과 리소스 관계 설명
 ├── practice-order/ # 학습 순서별 실제 실습 파일
 ├── operations/     # 설치 후 상태 확인·Addon 운영·Addon 이론
 └── examples/       # 실습 파일 생성을 위한 내부 기반 예제
@@ -33,9 +35,14 @@ k8s/
 Kubernetes 오브젝트와 YAML은 학습 순서에 맞춰
 [practice-order](./practice-order/README.md)에 배치한다.
 
+### 기본 구조
+
+Kubernetes 구성요소와 리소스의 관계는 [기본 구조 문서](./structure/README.md)에서
+먼저 확인한다.
+
 ### Addon·Operations
 
-- [Addon·Operations 이론](./operations/addons-operations.md)
+- [Operations 이론](./operations/operations-theory.md)
 - [운영 Addon 자료](./operations/addons/README.md)
 - [Operations 자료](./operations/README.md)
 
@@ -47,6 +54,7 @@ Kubernetes 오브젝트와 YAML은 학습 순서에 맞춰
 
 ```text
 practice-order/ 어떤 순서로 학습하는가 — Lesson 0 설치부터 실제 실습 YAML까지
+structure/      Kubernetes 구성요소와 리소스 관계
 operations/     현재 상태·Addon 운영·Addon Operations 이론
 examples/       실습 파일을 만들기 위한 내부 기반 예제
 ```

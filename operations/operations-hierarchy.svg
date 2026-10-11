@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Arial,sans-serif">
+  <title>Operations 하위 디렉터리 관계</title>
+  <desc>Operations를 상위 운영 영역으로 두고 클러스터, 노드, 워크로드, 네트워크, 스토리지, Addon, 장애 대응 영역의 관계를 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker>
+    <style>
+      .title{font-size:28px;font-weight:700;fill:#0f172a}.sub{font-size:15px;fill:#475569}.root{fill:#dbeafe;stroke:#2563eb;stroke-width:2}.box{fill:#f8fafc;stroke:#94a3b8;stroke-width:1.5}.addon{fill:#eff6ff;stroke:#60a5fa;stroke-width:1.5}.h{font-size:18px;font-weight:700;fill:#1d4ed8}.t{font-size:13px;fill:#1e293b}.n{font-size:12px;fill:#64748b}.edge{stroke:#64748b;stroke-width:1.8;fill:none;marker-end:url(#arrow)}.dash{stroke:#94a3b8;stroke-width:1.5;stroke-dasharray:6 4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#fff"/>
+  <text x="50" y="55" class="title">Operations 하위 디렉터리 관계</text>
+  <text x="50" y="84" class="sub">각 디렉터리는 하나의 운영 대상을 담당하고, 장애 대응은 모든 영역의 결과를 연결한다.</text>
+
+  <rect x="430" y="120" width="340" height="100" rx="16" class="root"/>
+  <text x="600" y="165" text-anchor="middle" class="h">operations/</text>
+  <text x="600" y="193" text-anchor="middle" class="t">설치된 클러스터의 관찰·판단·조치·검증</text>
+
+  <rect x="70" y="310" width="240" height="145" rx="12" class="box"/><text x="95" y="350" class="h">cluster/</text><text x="95" y="380" class="t">API·버전·시스템 Pod</text><text x="95" y="405" class="t">클러스터 전체 상태</text><text x="95" y="435" class="n">범위: 전체 클러스터</text>
+  <rect x="340" y="310" width="240" height="145" rx="12" class="box"/><text x="365" y="350" class="h">nodes/</text><text x="365" y="380" class="t">노드 상태·자원·이벤트</text><text x="365" y="405" class="t">배치·압박·복구</text><text x="365" y="435" class="n">대상: Node·kubelet</text>
+  <rect x="610" y="310" width="240" height="145" rx="12" class="box"/><text x="635" y="350" class="h">workloads/</text><text x="635" y="380" class="t">Pod·Deployment·Job</text><text x="635" y="405" class="t">롤아웃·로그·가용성</text><text x="635" y="435" class="n">대상: 애플리케이션</text>
+  <rect x="880" y="310" width="240" height="145" rx="12" class="box"/><text x="905" y="350" class="h">network/</text><text x="905" y="380" class="t">Service·Ingress·Endpoint</text><text x="905" y="405" class="t">통신 경로·정책</text><text x="905" y="435" class="n">대상: 연결성</text>
+
+  <rect x="205" y="545" width="240" height="145" rx="12" class="box"/><text x="230" y="585" class="h">storage/</text><text x="230" y="615" class="t">PV·PVC·StorageClass</text><text x="230" y="640" class="t">바인딩·마운트·복구</text><text x="230" y="670" class="n">대상: 데이터 경로</text>
+  <rect x="480" y="545" width="240" height="145" rx="12" class="addon"/><text x="505" y="585" class="h">addons/</text><text x="505" y="615" class="t">CNI·Ingress·CSI·Metrics</text><text x="505" y="640" class="t">확장 기능의 상태 확인</text><text x="505" y="670" class="n">설치: install/에서 수행</text>
+  <rect x="755" y="545" width="240" height="145" rx="12" class="box"/><text x="780" y="585" class="h">troubleshooting/</text><text x="780" y="615" class="t">이벤트·describe·logs</text><text x="780" y="640" class="t">원인 분석·복구 검증</text><text x="780" y="670" class="n">입력: 모든 운영 영역</text>
+
+  <path d="M480 220L190 305" class="edge"/><path d="M540 220L460 305" class="edge"/><path d="M660 220L730 305" class="edge"/><path d="M720 220L1000 305" class="edge"/>
+  <path d="M520 220L325 540" class="edge"/><path d="M600 220V540" class="edge"/><path d="M680 220L875 540" class="edge"/>
+  <path d="M995 455L875 540" class="dash"/><path d="M730 455L875 540" class="dash"/><path d="M460 455L875 540" class="dash"/>
+  <text x="1010" y="520" class="n">장애 원인 분석은 각 영역의 상태 정보와 이벤트를 종합</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Arial,sans-serif">
+  <title>Operations 운영 영역 전체 흐름</title>
+  <desc>클러스터 운영의 관찰, 판단, 조치와 검증 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker>
+    <style>
+      .bg{fill:#fff}.title{font-size:28px;font-weight:700;fill:#0f172a}.sub{font-size:15px;fill:#475569}.card{fill:#f8fafc;stroke:#94a3b8;stroke-width:1.6}.h{font-size:19px;font-weight:700;fill:#1d4ed8}.t{font-size:14px;fill:#1e293b}.edge{stroke:#475569;stroke-width:2;fill:none;marker-end:url(#arrow)}.note{font-size:14px;fill:#64748b}
+    </style>
+  </defs>
+  <rect width="1200" height="700" class="bg"/>
+  <text x="50" y="55" class="title">Kubernetes Operations 운영 흐름</text>
+  <text x="50" y="84" class="sub">설치된 클러스터의 실제 상태를 관찰하고, 원인을 판단한 뒤 조치·검증하는 반복 루프</text>
+  <rect x="55" y="145" width="250" height="190" rx="12" class="card"/><text x="80" y="185" class="h">1. 관찰</text><text x="80" y="220" class="t">Cluster / Node</text><text x="80" y="246" class="t">Workload / Addon</text><text x="80" y="272" class="t">Network / Storage</text><text x="80" y="310" class="note">kubectl 상태·이벤트·메트릭</text>
+  <rect x="350" y="145" width="250" height="190" rx="12" class="card"/><text x="375" y="185" class="h">2. 판단</text><text x="375" y="220" class="t">desired state와</text><text x="375" y="246" class="t">actual state 비교</text><text x="375" y="272" class="t">장애 범위와 우선순위 결정</text><text x="375" y="310" class="note">describe·logs·events</text>
+  <rect x="645" y="145" width="250" height="190" rx="12" class="card"/><text x="670" y="185" class="h">3. 조치</text><text x="670" y="220" class="t">설정·배포·노드·네트워크</text><text x="670" y="246" class="t">복구 또는 변경 적용</text><text x="670" y="272" class="t">최소 권한과 영향 범위 확인</text><text x="670" y="310" class="note">변경 이력과 감사 기록</text>
+  <rect x="940" y="145" width="205" height="190" rx="12" class="card"/><text x="965" y="185" class="h">4. 검증</text><text x="965" y="220" class="t">Ready / Available</text><text x="965" y="246" class="t">서비스·데이터·경로</text><text x="965" y="272" class="t">재발 여부 확인</text><text x="965" y="310" class="note">복구 판정</text>
+  <path d="M305 240H345" class="edge"/><path d="M600 240H640" class="edge"/><path d="M895 240H935" class="edge"/><path d="M1040 340V430H180V340" class="edge"/>
+  <text x="50" y="475" class="h">운영 영역</text>
+  <rect x="55" y="510" width="205" height="90" rx="10" class="card"/><text x="80" y="548" class="t">Cluster / Nodes</text><text x="80" y="574" class="note">Control Plane·자원</text>
+  <rect x="285" y="510" width="205" height="90" rx="10" class="card"/><text x="310" y="548" class="t">Workloads</text><text x="310" y="574" class="note">배포·롤아웃·로그</text>
+  <rect x="515" y="510" width="205" height="90" rx="10" class="card"/><text x="540" y="548" class="t">Network / Storage</text><text x="540" y="574" class="note">경로·바인딩·용량</text>
+  <rect x="745" y="510" width="205" height="90" rx="10" class="card"/><text x="770" y="548" class="t">Addons</text><text x="770" y="574" class="note">CNI·Ingress·CSI·Metrics</text>
+  <rect x="975" y="510" width="170" height="90" rx="10" class="card"/><text x="1000" y="548" class="t">Troubleshooting</text><text x="1000" y="574" class="note">원인·복구</text>
+</svg>

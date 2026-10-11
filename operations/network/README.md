@@ -2,6 +2,8 @@
 
 Service, Ingress, Endpoint와 Pod 간 통신 상태를 확인한다.
 
+![네트워크 운영 점검 흐름](./network-operations.svg)
+
 예정 명령:
 
 ```bash

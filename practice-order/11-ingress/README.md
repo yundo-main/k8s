@@ -8,7 +8,9 @@
 ![Ingress 외부 노출과 3-Tier 라우팅](./ingress-overview.svg)
 
 Controller가 설치되어 있지 않다면 먼저
-[`operations/addons/ingress`](../../operations/addons/ingress/README.md)의 설치
+[`install/playbooks/addons/ingress-nginx.yml`](../../install/playbooks/addons/ingress-nginx.yml)을
+실행하고 [`operations/addons/ingress`](../../operations/addons/ingress/README.md)에서
+운영 상태를 확인한다.
 절차를 실행한다. Ingress YAML만 적용해서는 외부 요청을 받을 수 없다.
 
 ## 실습 설치 절차

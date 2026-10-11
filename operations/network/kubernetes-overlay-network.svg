@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 800" width="1040" height="800" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Helvetica,Arial,sans-serif">
+  <title>워커 노드와 오버레이 네트워크</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#111111"/>
+    </marker>
+    <style>
+      .nodebg { fill: #eef3fa; }
+      .ntitle { font-size: 17px; font-weight: 700; fill: #111111; text-anchor: middle; }
+      .pod    { fill: #8da9cf; }
+      .layer  { fill: #2f4f8f; }
+      .ptxt   { font-size: 16px; font-weight: 700; fill: #111111; text-anchor: middle; }
+      .ltxt   { font-size: 16px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+      .overlay{ fill: #8a8a8a; }
+      .otxt   { font-size: 17px; font-weight: 700; fill: #111111; text-anchor: middle; }
+      .osub   { font-size: 13px; fill: #1f1f1f; text-anchor: middle; }
+      .pbox   { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.2; }
+      .ph     { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .pt     { font-size: 13px; fill: #1e293b; }
+      .eth    { fill: #5f5f5f; }
+      .etxt   { font-size: 15px; font-weight: 700; fill: #ffffff; text-anchor: middle; font-family: Menlo, Consolas, monospace; }
+      .edge   { stroke: #111111; stroke-width: 1.6; fill: none; marker-end: url(#arr); }
+      .phys   { font-size: 17px; font-weight: 700; fill: #111111; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1040" height="800" fill="#ffffff"/>
+
+  <!-- 워커 노드 1 -->
+  <text x="192" y="22" class="ntitle">워커 노드1</text>
+  <rect x="72" y="40" width="240" height="405" rx="6" class="nodebg"/>
+  <rect x="98" y="68" width="92" height="44" rx="5" class="pod"/>
+  <rect x="196" y="68" width="88" height="44" rx="5" class="pod"/>
+  <text x="144" y="96" class="ptxt">파드</text>
+  <text x="240" y="96" class="ptxt">파드</text>
+  <rect x="98" y="131" width="186" height="52" rx="5" class="layer"/>
+  <text x="191" y="163" class="ltxt">도커</text>
+  <rect x="98" y="192" width="186" height="53" rx="5" class="layer"/>
+  <text x="191" y="224" class="ltxt">쿠버넷</text>
+  <rect x="98" y="254" width="186" height="53" rx="5" class="layer"/>
+  <text x="191" y="286" class="ltxt">쿠버넷</text>
+
+  <!-- 워커 노드 2 -->
+  <text x="520" y="22" class="ntitle">워커 노드2</text>
+  <rect x="400" y="40" width="240" height="405" rx="6" class="nodebg"/>
+  <rect x="426" y="68" width="92" height="44" rx="5" class="pod"/>
+  <rect x="524" y="68" width="88" height="44" rx="5" class="pod"/>
+  <text x="472" y="96" class="ptxt">파드</text>
+  <text x="568" y="96" class="ptxt">파드</text>
+  <rect x="426" y="131" width="186" height="52" rx="5" class="layer"/>
+  <text x="519" y="163" class="ltxt">도커</text>
+  <rect x="426" y="192" width="186" height="53" rx="5" class="layer"/>
+  <text x="519" y="224" class="ltxt">쿠버넷</text>
+  <rect x="426" y="254" width="186" height="53" rx="5" class="layer"/>
+  <text x="519" y="286" class="ltxt">쿠버넷</text>
+
+  <!-- 워커 노드 3 -->
+  <text x="848" y="22" class="ntitle">워커 노드3</text>
+  <rect x="728" y="40" width="240" height="405" rx="6" class="nodebg"/>
+  <rect x="754" y="68" width="92" height="44" rx="5" class="pod"/>
+  <rect x="852" y="68" width="88" height="44" rx="5" class="pod"/>
+  <text x="800" y="96" class="ptxt">파드</text>
+  <text x="896" y="96" class="ptxt">파드</text>
+  <rect x="754" y="131" width="186" height="52" rx="5" class="layer"/>
+  <text x="847" y="163" class="ltxt">도커</text>
+  <rect x="754" y="192" width="186" height="53" rx="5" class="layer"/>
+  <text x="847" y="224" class="ltxt">쿠버넷</text>
+  <rect x="754" y="254" width="186" height="53" rx="5" class="layer"/>
+  <text x="847" y="286" class="ltxt">쿠버넷</text>
+
+  <!-- 오버레이 네트워크: 노드 위에 걸쳐 그림 -->
+  <rect x="46" y="325" width="948" height="70" rx="6" class="overlay"/>
+  <text x="520" y="354" class="otxt">오버레이 네트워크</text>
+  <text x="520" y="379" class="osub">노드 간 파드 통신을 위한 가상(논리) 네트워크</text>
+
+  <!-- eth0 -->
+  <rect x="125" y="423" width="133" height="44" rx="5" class="eth"/>
+  <text x="191" y="451" class="etxt">eth0</text>
+  <rect x="454" y="423" width="133" height="44" rx="5" class="eth"/>
+  <text x="520" y="451" class="etxt">eth0</text>
+  <rect x="781" y="423" width="133" height="44" rx="5" class="eth"/>
+  <text x="847" y="451" class="etxt">eth0</text>
+
+  <!-- 물리 네트워크 -->
+  <line x1="520" y1="560" x2="193" y2="470" class="edge"/>
+  <line x1="520" y1="560" x2="520" y2="470" class="edge"/>
+  <line x1="520" y1="560" x2="846" y2="470" class="edge"/>
+  <text x="520" y="594" class="phys">물리 네트워크</text>
+
+  <!-- 오버레이 네트워크 설명 -->
+  <rect x="46" y="620" width="948" height="160" rx="8" class="pbox"/>
+  <text x="66" y="648" class="ph">오버레이 네트워크란?</text>
+  <text x="66" y="674" class="pt">• 역할: 서로 다른 노드의 파드가 NAT 없이 파드 IP로 직접 통신하도록 물리 네트워크 위에 구성한 논리 네트워크</text>
+  <text x="66" y="696" class="pt">• 동작: 파드 패킷을 VXLAN·IPIP 등으로 캡슐화해 노드의 eth0로 전송하고, 수신 노드에서 해제해 대상 파드로 전달</text>
+  <text x="66" y="718" class="pt">• 구현: CNI 플러그인(Calico, Flannel, Cilium 등)이 노드 간 터널과 파드 IP 대역 라우팅을 담당</text>
+  <text x="66" y="740" class="pt">• 보안: 기본적으로 암호화되지 않으므로 WireGuard·IPsec 적용과 기본 deny NetworkPolicy 구성을 검토</text>
+  <text x="66" y="762" class="pt">• 방화벽: 노드 간 VXLAN은 4789/udp, Calico IPIP는 IP 프로토콜 4를 허용해야 함</text>
+</svg>
