@@ -11,5 +11,5 @@ Kubernetes 노드의 상태, 역할, IP, 운영체제, 커널, 컨테이너 런�
 ## 분류 기준
 
 - `k8s/practice-order/17-cluster-scoped/`: Node와 같은 리소스의 선언적 YAML
-- `k8s/addons/`: 리소스 상태를 조정하거나 클러스터 기능을 확장하는 구성
+- `k8s/operations/addons/`: 설치된 Addon의 상태를 확인하는 운영 참고 자료
 - `k8s/operations/nodes/`: `kubectl`을 이용한 노드 운영·점검 명령

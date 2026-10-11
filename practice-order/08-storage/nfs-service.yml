@@ -13,4 +13,24 @@ spec:
     - name: rpcbind
       port: 111
       targetPort: rpcbind
+      protocol: TCP
+    - name: rpcbind-udp
+      port: 111
+      targetPort: rpcbind-udp
+      protocol: UDP
+    - name: mountd
+      port: 32767
+      targetPort: mountd
+      protocol: TCP
+    - name: mountd-udp
+      port: 32767
+      targetPort: mountd-udp
+      protocol: UDP
+    - name: statd
+      port: 32765
+      targetPort: statd
+      protocol: TCP
+    - name: statd-udp
+      port: 32765
+      targetPort: statd-udp
       protocol: UDP

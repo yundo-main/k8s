@@ -9,7 +9,7 @@
 ```bash
 export IMAGE_TAG="$(git rev-parse --short HEAD)"
 docker build -t jarrodkim/fastapi-backend:"$IMAGE_TAG" \
-  k8s/practice-order/22-image-build/backend
+  practice-order/22-image-build/backend
 docker image inspect jarrodkim/fastapi-backend:"$IMAGE_TAG"
 ```
 

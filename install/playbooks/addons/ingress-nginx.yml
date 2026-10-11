@@ -1,0 +1,13 @@
+---
+- name: Install NGINX Ingress Controller addon
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Run NGINX Ingress installer
+      ansible.builtin.command:
+        argv:
+          - bash
+          - "{{ playbook_dir }}/../../addons/ingress/install-ingress-nginx.sh"
+      environment:
+        KUBECONFIG: "{{ lookup('ansible.builtin.env', 'KUBECONFIG') }}"

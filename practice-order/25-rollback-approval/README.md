@@ -8,6 +8,9 @@ kubectl rollout undo deployment/fastcgi-backend
 kubectl rollout status deployment/fastcgi-backend --timeout=180s
 ```
 
+테스트 네임스페이스에서는 `NAMESPACE=ci-verify bash ./rollback.sh`처럼
+지정한다. 승인 프롬프트에 `y`를 입력해야 롤백한다.
+
 - [승인 후 롤백 스크립트](./rollback.sh)
 
 GitHub Actions에서는 `production` Environment에 Required reviewers를 설정하고,

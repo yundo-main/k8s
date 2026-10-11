@@ -71,8 +71,13 @@ Control Plane에서 Calico CNI manifest를 적용하고 Calico DaemonSet과 노�
 `192.168.0.0/16` Pod CIDR을 기준으로 사용한다.
 
 ```bash
-ansible-playbook -i inventory/hosts.yml playbooks/cni-calico.yml --ask-become-pass
+ansible-playbook -i inventory/hosts.yml \
+  playbooks/addons/cni-calico.yml --ask-become-pass
 ```
+
+Calico는 Worker 조인 전에 필요한 기본 CNI이므로 기본 설치에서는 이 단계에서
+실행한다. 기본 설치가 이미 끝난 클러스터에서 다른 Addon과 함께 다시 확인하려면
+`playbooks/addons.yml`을 사용할 수 있다.
 
 ## 08. Worker 노드 조인
 
@@ -82,6 +87,28 @@ Control Plane에서 join 명령을 생성해 Worker 노드에 실행하고, 마�
 ```bash
 ansible-playbook -i inventory/hosts.yml playbooks/workers.yml --ask-become-pass
 ```
+
+Control Plane 초기화와 Worker 조인 후에는 설치 Playbook이 모든 노드의 kubelet에
+`serverTLSBootstrap: true`를 설정한다. kubelet Serving Certificate는 노드의
+HTTPS `10250` 포트에 사용된다.
+
+Serving CSR을 확인한다.
+
+```bash
+kubectl get csr
+```
+
+`kubernetes.io/kubelet-serving` 서명 요청만 요청자·노드 IP/DNS SAN·사용 목적을
+검토한 뒤 승인한다.
+
+```bash
+kubectl describe csr <serving-csr-name>
+kubectl certificate approve <serving-csr-name>
+```
+
+기본 Kubernetes CSR 승인 컨트롤러는 kubelet Serving Certificate를 보안상
+자동 승인하지 않으므로, 승인 기준을 확인하는 운영 절차가 필요하다. 모든
+노드의 Serving Certificate가 발급된 뒤 Metrics Server를 설치한다.
 
 ## 09. Mac 관리 호스트에서 kubectl 사용
 
@@ -126,3 +153,18 @@ source ~/.zshrc
 
 Mac에서 kubeconfig 설정을 완료한 뒤 CoreDNS, Calico, kube-system Pod 상태와
 Pod 간 통신을 검증한다.
+
+## 다음 단계: Addon 별도 관리
+
+기본 Kubernetes 설치와 Addon 설치는 별도 작업으로 관리한다. 설치 Playbook은
+노드·containerd·kubeadm·CNI·kubeconfig 준비까지만 담당한다.
+
+클러스터 설치가 끝나면 다음 문서에서 실습에 필요한 Addon을 선택해 설치하고
+검증한다.
+
+- [Addon 설치 순서](../addons/README.md)
+- [Addon Playbook 실행](./addons/README.md)
+- [운영 Addon 자료](../../operations/addons/README.md)
+- [클러스터 아키텍처 점검](../../operations/cluster/README.md#이미지-아키텍처-사전-점검)
+
+Addon이 필요한 실습은 해당 Addon의 설치·확인 완료 후 시작한다.

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  # 각 노드에서 실행할 Pod 묶음의 이름
+  name: node-nginx
+  labels:
+    app: node-nginx
+spec:
+  # Pod template의 app 라벨과 일치해야 한다.
+  selector:
+    matchLabels:
+      app: node-nginx
+  template:
+    metadata:
+      labels:
+        app: node-nginx
+    spec:
+      containers:
+        - name: nginx
+          # DaemonSet 동작 확인을 위한 경량 웹 서버 이미지
+          image: nginx:stable-alpine
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            # 모든 노드에 배치되므로 작은 기본 자원을 요청한다.
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi

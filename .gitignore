@@ -12,3 +12,6 @@ __pycache__/
 *.log
 tmp/
 
+## 실습코드 생성용 기본 소스
+examples
+

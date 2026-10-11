@@ -35,5 +35,4 @@ Chapter 3은 `practice-order`의 19번부터 시작한다. Chapter 1·2에서 �
 | 31 | Kubernetes 정책 검증 |
 | 32 | DevSecOps 보안 게이트 |
 
-실행 가능한 GitHub Actions 템플릿은
-[`devops/chapter-03`](../../devops/chapter-03/README.md)에 둔다.
+실행 가능한 GitHub Actions 템플릿은 19번과 20번 실습 디렉터리에 둔다.

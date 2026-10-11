@@ -2,6 +2,11 @@
 
 Stateful 애플리케이션의 데이터를 Pod 생명주기와 분리한다.
 
+> 사전 확인: 이 실습은 NFS Server Pod 이미지를 사용하므로 먼저
+> [클러스터 이미지 아키텍처 점검](../../operations/cluster/README.md#이미지-아키텍처-사전-점검)을
+> 실행한다. `andrewkidd/nfs-server:v2.2.7`은 ARM64·AMD64를 지원하지만,
+> 노드 커널의 `nfs`·`nfsd` 모듈이 필요하다.
+
 PV와 PVC의 역할과 연결 흐름은 다음 SVG에서 확인한다.
 
 ![PV와 PVC 관계](./pv-pvc-overview.svg)
@@ -9,7 +14,8 @@ PV와 PVC의 역할과 연결 흐름은 다음 SVG에서 확인한다.
 ## NFS Pod 기반 CSI 실습
 
 이 실습은 외부 NFS 서버 대신 테스트용 `nfs-server` Pod를 사용한다. NFS CSI
-Driver가 이미 설치되어 있어야 한다.
+Driver가 이미 설치되어 있어야 하며, NFS Server Pod가 배치될 모든 노드에
+`nfs`·`nfsd` 커널 모듈이 로드되어 있어야 한다.
 
 ### 1. NFS CSI Driver 확인
 
@@ -28,6 +34,8 @@ kubectl get csidriver nfs.csi.k8s.io
 ### 2. NFS Server Pod와 PVC 실행
 
 ```bash
+kubectl apply -f nfs-kernel-modules.yml
+kubectl rollout status daemonset/nfs-kernel-modules
 kubectl apply -f nfs-pod.yml
 kubectl apply -f nfs-service.yml
 kubectl apply -f nfs-storageclass.yml
@@ -39,6 +47,7 @@ kubectl apply -f nfs-test-pod.yml
 
 ```bash
 kubectl get pod nfs-server nfs-pvc-test -o wide
+kubectl get daemonset nfs-kernel-modules
 kubectl get service nfs-server
 kubectl get storageclass nfs-csi
 kubectl get pvc nfs-test-pvc
@@ -58,10 +67,11 @@ kubectl delete -f nfs-pvc.yml
 kubectl delete -f nfs-storageclass.yml
 kubectl delete -f nfs-service.yml
 kubectl delete -f nfs-pod.yml
+kubectl delete -f nfs-kernel-modules.yml
 ```
 
-`nfs-server` Pod는 `hostPath`를 사용하므로 실습용 구성이다. 서버 Pod가 실행되는
-노드에 종속되며 고가용성을 제공하지 않는다.
+`nfs-server` Pod는 `hostPath`와 `privileged` 권한을 사용하므로 실습용 구성이다.
+서버 Pod가 실행되는 노드와 노드 커널에 종속되며 고가용성을 제공하지 않는다.
 
 - [`persistentvolume/`](./persistentvolume/): 실제 저장소 자원
 - [`persistentvolumeclaim/`](./persistentvolumeclaim/): 애플리케이션의 저장소 요청

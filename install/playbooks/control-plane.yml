@@ -58,3 +58,16 @@
     - name: Control Plane 초기화 결과를 출력한다.
       ansible.builtin.debug:
         msg: "{{ control_plane_nodes.stdout_lines }}"
+
+    - name: kubelet Serving Certificate 요청을 활성화한다.
+      ansible.builtin.lineinfile:
+        path: /var/lib/kubelet/config.yaml
+        regexp: '^serverTLSBootstrap:'
+        line: 'serverTLSBootstrap: true'
+        insertafter: EOF
+        backup: true
+
+    - name: Serving Certificate 설정을 반영하도록 kubelet을 재시작한다.
+      ansible.builtin.systemd:
+        name: kubelet
+        state: restarted

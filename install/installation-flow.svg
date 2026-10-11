@@ -68,10 +68,12 @@
   <text x="535" y="870" font-family="Arial,sans-serif" font-size="15" fill="#4c1d95">workers.yml</text>
   <text x="535" y="898" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">10.10.10.151 · 10.10.10.152</text>
   <text x="535" y="926" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">kubeadm join 실행</text>
+  <text x="535" y="950" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">kubelet Serving CSR 요청</text>
 
   <rect x="950" y="795" width="390" height="165" rx="14" fill="#ecfeff" stroke="#0891b2" stroke-width="2" filter="url(#shadow)"/>
   <text x="980" y="834" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#0e7490">7. 최종 검증</text>
   <text x="980" y="870" font-family="Arial,sans-serif" font-size="15" fill="#164e63">verify.yml</text>
   <text x="980" y="898" font-family="Arial,sans-serif" font-size="14" fill="#164e63">모든 노드 Ready · CNI · CoreDNS</text>
   <text x="980" y="926" font-family="Arial,sans-serif" font-size="14" fill="#164e63">Pod·Service 통신 · 재부팅 복구</text>
+  <text x="980" y="950" font-family="Arial,sans-serif" font-size="14" fill="#164e63">Serving CSR 승인 · 메트릭 검증</text>
 </svg>

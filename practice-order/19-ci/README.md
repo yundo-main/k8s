@@ -3,7 +3,6 @@
 Pull Request와 `main` 브랜치 Push 시 Kubernetes YAML과 애플리케이션 검증을
 자동화한다.
 
-- [CI workflow example](../../devops/chapter-03/ci.yml.example)
 - [실습용 CI workflow](./ci.yml)
 - [manifest 검사 스크립트](../21-application-test/check-manifests.sh)
 

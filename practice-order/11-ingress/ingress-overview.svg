@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
-  <title id="title">Ingress 외부 노출과 3-Tier 경로 라우팅</title>
-  <desc id="desc">세 노드의 NodePort로 들어온 외부 요청이 Nginx Ingress Controller와 fastcgi-ingress 규칙을 거쳐 Frontend 또는 Backend Service로 전달되는 흐름을 보여준다.</desc>
+  <title id="title">Ingress Controller 설치와 3-Tier 외부 라우팅</title>
+  <desc id="desc">Ingress Controller 설치 후 세 노드의 NodePort로 들어온 외부 요청이 IngressClass와 fastcgi-ingress 규칙을 거쳐 Frontend 또는 Backend Service로 전달되는 흐름을 보여준다.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#475569"/>
@@ -21,28 +21,28 @@
   </defs>
 
   <rect width="1400" height="820" fill="#f8fafc"/>
-  <text x="60" y="55" class="title">Ingress: 외부 요청을 3-Tier Service로 라우팅</text>
-  <text x="60" y="86" class="body">기준 manifest: k8s/practice-order/11-ingress/ingress.yml</text>
+  <text x="60" y="55" class="title">Ingress Controller 설치 → 3-Tier 외부 라우팅</text>
+  <text x="60" y="86" class="body">설치: operations/addons/ingress · 라우팅: practice-order/11-ingress/ingress.yml</text>
 
   <rect x="60" y="135" width="270" height="210" rx="16" class="external"/>
   <text x="92" y="180" class="heading">외부 클라이언트</text>
   <text x="92" y="220" class="body">브라우저 · API Client</text>
   <text x="92" y="260" class="small">10.10.10.150~152</text>
   <text x="92" y="290" class="small">NodePort: 30198</text>
-  <text x="92" y="320" class="small">HTTPS: 31476</text>
+  <text x="92" y="320" class="small">HTTPS: 미적용</text>
   <path d="M330 240 H450" class="flow"/>
 
   <rect x="450" y="135" width="360" height="210" rx="16" class="controller"/>
   <text x="485" y="180" class="heading">Ingress Controller</text>
-  <text x="485" y="220" class="body">ingress-nginx</text>
-  <text x="485" y="260" class="small">Service: NodePort</text>
-  <text x="485" y="290" class="small">ingressClassName: nginx</text>
+  <text x="485" y="220" class="body">설치: ingress-nginx v1.15.1</text>
+  <text x="485" y="260" class="small">HTTP NodePort: 30198</text>
+  <text x="485" y="290" class="small">Pod: ingress-nginx-controller</text>
   <text x="485" y="320" class="small">외부 요청 수신·전달</text>
   <path d="M810 240 H930" class="flow"/>
 
   <rect x="930" y="135" width="400" height="210" rx="16" class="rule"/>
-  <text x="965" y="180" class="heading">Ingress: fastcgi-ingress</text>
-  <text x="965" y="225" class="body">경로 기반 라우팅</text>
+  <text x="965" y="180" class="heading">IngressClass + Ingress</text>
+  <text x="965" y="225" class="body">nginx · fastcgi-ingress</text>
   <text x="965" y="265" class="small">/       → frontend:80</text>
   <text x="965" y="300" class="small">/api/ → fastcgi-backend:8000</text>
   <text x="965" y="330" class="small">Service 이름과 포트로 전달</text>

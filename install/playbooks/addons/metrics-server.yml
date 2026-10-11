@@ -1,0 +1,14 @@
+---
+- name: Install Metrics Server addon
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Run Metrics Server installer
+      ansible.builtin.command:
+        argv:
+          - bash
+          - "{{ playbook_dir }}/../../addons/autoscaling/install-metrics-server.sh"
+      environment:
+        KUBECONFIG: "{{ lookup('ansible.builtin.env', 'KUBECONFIG') }}"
+        METRICS_SERVER_INSECURE_TLS: "{{ lookup('ansible.builtin.env', 'METRICS_SERVER_INSECURE_TLS') | default('false', true) }}"

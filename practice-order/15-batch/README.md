@@ -6,6 +6,8 @@
 
 [`3tier-mariadb-backup.yml`](./3tier-mariadb-backup.yml)은 매일 02시에
 `mariadb` Service로 접속해 `fcgidb`를 덤프하고 `nfs-test-pvc`에 저장한다.
+Backup Pod에는 `app: mariadb-backup` 라벨을 부여하며, 12번 NetworkPolicy에서
+MariaDB의 3306 포트 접근을 허용해야 Job이 완료된다.
 
 ```bash
 kubectl apply -f 3tier-mariadb-backup.yml

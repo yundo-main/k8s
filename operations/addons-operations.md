@@ -84,6 +84,5 @@ Operations
 - Addon과 Operations는 개념적으로 묶을 수 있지만 실습 파일은 분리하는 편이
   관리하기 쉽다.
 
-상세 자료는 [addons](../addons/README.md)와
-[operations](../operations/README.md)에서 확인한다.
-
+상세 자료는 [운영 Addon 자료](./addons/README.md)와
+[operations](./README.md)에서 확인한다.

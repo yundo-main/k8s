@@ -15,8 +15,8 @@ jobs:
           ruby -e 'require "yaml"; Dir["k8s/**/*.yml", "k8s/**/*.yaml"].each { |f| YAML.load_stream(File.read(f)); puts "YAML OK: #{f}" }'
       - name: Validate Kubernetes manifests
         run: |
-          kubectl apply --dry-run=client -f k8s/practice-order/10-3tier/frontend.yml
-          kubectl apply --dry-run=client -f k8s/practice-order/10-3tier/backend.yml
-          kubectl apply --dry-run=client -f k8s/practice-order/11-ingress/ingress.yml
+          kubectl apply --dry-run=client -f practice-order/10-3tier/frontend.yml
+          kubectl apply --dry-run=client -f practice-order/10-3tier/backend.yml
+          kubectl apply --dry-run=client -f practice-order/11-ingress/ingress.yml
       - name: Run practice test
-        run: bash k8s/practice-order/21-application-test/check-manifests.sh
+        run: bash practice-order/21-application-test/check-manifests.sh

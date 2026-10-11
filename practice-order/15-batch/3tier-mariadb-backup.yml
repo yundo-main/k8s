@@ -10,6 +10,10 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          # 12번 NetworkPolicy가 MariaDB 접근을 허용할 수 있도록 식별한다.
+          labels:
+            app: mariadb-backup
         spec:
           restartPolicy: OnFailure
           containers:

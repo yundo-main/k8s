@@ -1,9 +1,9 @@
 # Kubernetes 실습 순서
 
-이 디렉터리는 설치가 완료된 Kubernetes 클러스터에서 실습 파일을 순서대로
+이 디렉터리는 Lesson 0 설치부터 Kubernetes 클러스터 실습 파일을 순서대로
 실행하는 학습 경로다.
 
-클러스터 설치는 별도 트랙인 [install](../install/plan.md)에서 진행한다.
+[Lesson 0. Kubernetes 설치](../install/plan.md)에서 클러스터를 먼저 준비한다.
 `examples/`는 실습 파일 생성을 위한 내부 기반 예제이므로 학습 경로에 포함하지
 않는다.
 
@@ -16,7 +16,7 @@
 ## 전체 순서
 
 ```text
-설치 완료
+00 Lesson 0. Kubernetes 설치
   ↓
 01 이미지 Pull Secret
   ↓
@@ -42,7 +42,7 @@
   ↓
 12 NetworkPolicy
   ↓
-13 Probe·Scale
+13 Probe·Scale (Metrics Server 선행)
   ↓
 14 Security
   ↓
@@ -80,6 +80,40 @@ kubectl get events -A --sort-by=.lastTimestamp
 ```
 
 모든 노드가 `Ready`이고 CNI 관련 Pod가 정상이어야 다음 단계로 진행한다.
+
+노드 CPU 아키텍처와 실습 이미지가 일치하는지도 확인한다. 특히 ARM64
+클러스터에서 AMD64 전용 이미지를 사용하면 이미지 Pull 이후에도
+`exec format error`가 발생할 수 있다.
+
+```bash
+bash ../operations/cluster/check-architecture.sh
+```
+
+이 점검 결과는 기록용이며 클러스터 리소스를 변경하지 않는다. 현재 점검
+클러스터는 모든 노드가 ARM64이고, 08-storage의 기존
+`itsthenetwork/nfs-server-alpine:latest` 이미지는 ARM64에서 실행되지 않았다.
+현재 08-storage는 `andrewkidd/nfs-server:v2.2.7`과 노드 NFS 커널 모듈 준비
+DaemonSet을 사용한다.
+
+## 실습별 선행조건 확인
+
+각 실습은 해당 디렉터리의 README에 있는 파일 순서와 선행조건을 먼저 확인한
+뒤 적용한다. 전체 실습을 무조건 연속 적용하지 않는다.
+
+| 단계 | 먼저 준비할 파일·구성요소 | 시작 전 확인 |
+| --- | --- | --- |
+| 01~07 | 이미지 Pull Secret, ConfigMap, 애플리케이션 Secret | 노드 상태와 이미지 아키텍처 |
+| 08 | `nfs-pod.yml`, `nfs-service.yml`, `nfs-storageclass.yml`, `nfs-pvc.yml` | NFS CSI Driver, ARM64 호환 NFS 이미지 |
+| 09 | 08번의 `nfs-csi` StorageClass, 05~07번 리소스 | PVC가 `Bound`인지 확인 |
+| 10 | 06번 ConfigMap, 07번 Secret | MariaDB·Backend·Frontend 순서 |
+| 11 | 10번의 Frontend·Backend Service | `kubectl get ingressclass nginx` |
+| 12 | Calico CNI, 10·11번 정상 동작 | DNS와 Ingress Controller 라벨 |
+| 13 | 10번 Backend, PriorityClass, PDB | `kubectl top pods` |
+| 14~18 | 10번 3-Tier 및 관련 기반 리소스 | 각 README의 적용 순서 |
+
+기본 클러스터 설치는 [Lesson 0 Playbook](../install/playbooks/README.md)에서
+진행하고, 선택형 Addon 설치는 [Addon 설치 순서](../install/addons/README.md)에서
+별도로 진행한다.
 
 Chapter 1은 01~10단계, Chapter 2는 11~18단계로 구성한다.
 
@@ -254,8 +288,9 @@ LimitRange 등을 학습한다.
 
 기본 리소스 학습 이후 다음 영역으로 확장한다.
 
-- [Addon·Operations 이론](../theory/addons-operations.md)
-- [Addons](../addons/README.md): CNI, Ingress, Storage, Operator
+- [Addon·Operations 이론](../operations/addons-operations.md)
+- [Addon 설치 순서](../install/addons/README.md)
+- [운영 Addon 자료](../operations/addons/README.md): CNI, Ingress, Storage, Operator
 - [Operations](../operations/README.md): 클러스터·노드·네트워크·장애 대응
 
 ## Chapter 3. DevOps와 CI/CD
@@ -267,8 +302,8 @@ Rollout 확인을 자동화한다.
 
 ## 주의사항
 
-- `k8s/install/`과 `k8s/examples/`는 이 학습 디렉터리의 실습 파일로 이동하지 않는다.
-- `k8s/examples/`는 실습 파일 생성을 위한 내부 기반 예제다.
+- `k8s/install/`은 Lesson 0 설치 자동화, `k8s/examples/`는 실습 파일 생성을
+  위한 내부 기반 예제다.
 - 테스트용 `latest` 태그는 이미지 변경으로 결과가 달라질 수 있다.
 - Secret 값과 kubeconfig는 저장소에 커밋하지 않는다.
 - 기존 `k8s/examples/db.yml`과 StatefulSet MariaDB 예제를 동시에 적용하지 않는다.

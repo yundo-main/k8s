@@ -2,7 +2,6 @@
 
 검증된 변경을 Docker Hub에 Push하고 Kubernetes에 배포한다.
 
-- [CD workflow example](../../devops/chapter-03/cd.yml.example)
 - [실습용 CD workflow](./cd.yml)
 
 실제 사용 시 `.github/workflows/cd.yml`로 복사하고 Dockerfile 경로,
