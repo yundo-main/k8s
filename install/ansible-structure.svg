@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="13.333in" height="7.5in" preserveAspectRatio="xMidYMid meet" font-family="'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Arial,sans-serif">
+  <title>Ansible 설치 구조</title>
+  <desc>관리 호스트의 inventory와 playbook이 ansible-playbook을 통해 Kubernetes 노드에 task와 module을 실행하는 흐름을 보여준다.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+    <style>
+      .title{font-size:30px;font-weight:700;fill:#0f172a}.sub{font-size:16px;fill:#475569}.host{fill:#eff6ff;stroke:#2563eb;stroke-width:2}.engine{fill:#ecfdf5;stroke:#10b981;stroke-width:2}.node{fill:#fff7ed;stroke:#f97316;stroke-width:2}.card{fill:#fff;stroke:#94a3b8;stroke-width:1.4}.h{font-size:20px;font-weight:700;fill:#1d4ed8}.g{font-size:20px;font-weight:700;fill:#047857}.o{font-size:20px;font-weight:700;fill:#c2410c}.t{font-size:14px;fill:#1e293b}.n{font-size:13px;fill:#64748b}.edge{stroke:#64748b;stroke-width:2;fill:none;marker-end:url(#arrow)}.dash{stroke:#94a3b8;stroke-width:1.6;stroke-dasharray:7 5;fill:none;marker-end:url(#arrow)}.code{font-family:Menlo,Consolas,monospace;font-size:13px;fill:#334155}
+    </style>
+  </defs>
+  <rect width="1280" height="720" fill="#fff"/>
+  <text x="50" y="55" class="title">Ansible 설치 구조</text>
+  <text x="50" y="84" class="sub">관리 호스트가 inventory의 대상 노드에 Playbook을 실행하고 원하는 상태를 구성한다.</text>
+
+  <rect x="45" y="125" width="330" height="300" rx="16" class="host"/>
+  <text x="75" y="170" class="h">관리 호스트</text>
+  <text x="75" y="198" class="n">Ansible을 실행하는 컴퓨터</text>
+  <rect x="75" y="225" width="270" height="75" rx="10" class="card"/>
+  <text x="95" y="253" class="h">inventory/hosts.yml</text>
+  <text x="95" y="279" class="t">노드·그룹·SSH 변수</text>
+  <rect x="75" y="320" width="270" height="75" rx="10" class="card"/>
+  <text x="95" y="348" class="h">playbooks/*.yml</text>
+  <text x="95" y="374" class="t">설치 단계와 실행 순서</text>
+
+  <rect x="465" y="175" width="350" height="200" rx="16" class="engine"/>
+  <text x="640" y="220" text-anchor="middle" class="g">ansible-playbook</text>
+  <text x="640" y="250" text-anchor="middle" class="t">Playbook을 읽고 대상 노드에 실행</text>
+  <rect x="500" y="280" width="280" height="62" rx="8" class="card"/>
+  <text x="520" y="306" class="code">Play → Task → Module</text>
+  <text x="520" y="328" class="n">변수와 조건에 따라 작업 수행</text>
+
+  <rect x="905" y="125" width="330" height="300" rx="16" class="node"/>
+  <text x="935" y="170" class="o">Kubernetes 노드</text>
+  <text x="935" y="198" class="n">SSH로 접속되는 대상 서버</text>
+  <rect x="935" y="225" width="270" height="75" rx="10" class="card"/>
+  <text x="955" y="253" class="o">Control Plane</text>
+  <text x="955" y="279" class="t">kubeadm·API Server·etcd</text>
+  <rect x="935" y="320" width="270" height="75" rx="10" class="card"/>
+  <text x="955" y="348" class="o">Worker Nodes</text>
+  <text x="955" y="374" class="t">containerd·kubelet·Pod</text>
+
+  <path d="M375 275H455" class="edge"/>
+  <path d="M815 275H895" class="edge"/>
+  <text x="390" y="258" class="n">SSH·Python</text>
+  <text x="825" y="258" class="n">Task 실행</text>
+
+  <rect x="145" y="500" width="990" height="135" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="180" y="540" class="h">실행 계층</text>
+  <text x="180" y="575" class="t">Playbook: 설치 단계 묶음</text>
+  <text x="475" y="575" class="t">Play: 대상 호스트 지정</text>
+  <text x="745" y="575" class="t">Task: 하나의 작업</text>
+  <text x="980" y="575" class="t">Module: 실제 기능 실행</text>
+  <path d="M350 560H455" class="dash"/><path d="M645 560H725" class="dash"/><path d="M900 560H960" class="dash"/>
+  <text x="180" y="608" class="n">예: preflight → bootstrap → containerd → control-plane → workers</text>
+</svg>
