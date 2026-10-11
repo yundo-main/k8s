@@ -1,5 +1,7 @@
 ---
-# 기본 Kubernetes 설치가 완료된 뒤 선택형 Addon을 한 번에 설치한다.
+# 기본 Kubernetes 설치가 완료된 뒤 선택형 Addon을 한 번에 설치하는 진입점이다.
+# 실행 순서: Calico 네트워크 → Metrics API → Ingress Controller → NFS CSI.
+# 각 하위 Playbook은 실제 설치를 담당하고 이 파일은 실행 순서만 조정한다.
 - import_playbook: addons/cni-calico.yml
 - import_playbook: addons/metrics-server.yml
 - import_playbook: addons/ingress-nginx.yml

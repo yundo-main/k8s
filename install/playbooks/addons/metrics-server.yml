@@ -1,10 +1,16 @@
 ---
+# Metrics Server는 Pod·Node의 CPU와 메모리 사용량을 metrics.k8s.io API로
+# 제공한다. HPA 실습 전에 설치해야 한다.
+# 실제 kubectl 적용과 rollout 확인은 설치 스크립트에 위임한다.
 - name: Install Metrics Server addon
   hosts: localhost
   connection: local
   gather_facts: false
   tasks:
     - name: Run Metrics Server installer
+      # 관리 호스트의 KUBECONFIG를 설치 스크립트에 전달한다.
+      # Serving Certificate가 없는 기존 클러스터에서만
+      # METRICS_SERVER_INSECURE_TLS=true를 명시적으로 사용한다.
       ansible.builtin.command:
         argv:
           - bash

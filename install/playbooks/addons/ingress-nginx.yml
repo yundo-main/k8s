@@ -1,10 +1,14 @@
 ---
+# NGINX Ingress Controller는 Ingress 오브젝트의 경로 규칙을 실제 HTTP
+# 프록시 동작으로 구현한다. 베어메탈 클러스터에서는 NodePort를 사용한다.
+# 실제 manifest 적용과 NodePort 설정은 설치 스크립트에 위임한다.
 - name: Install NGINX Ingress Controller addon
   hosts: localhost
   connection: local
   gather_facts: false
   tasks:
     - name: Run NGINX Ingress installer
+      # 관리 호스트의 KUBECONFIG를 설치 스크립트에 전달한다.
       ansible.builtin.command:
         argv:
           - bash

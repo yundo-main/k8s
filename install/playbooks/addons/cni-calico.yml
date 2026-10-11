@@ -1,6 +1,7 @@
 # 실행 순서 07: Control Plane에 Calico CNI를 설치하고 노드 상태를 확인한다.
 # Calico manifest의 Pod CIDR 설정은 control-plane.yml과 일치해야 한다.
 # CNI가 준비되기 전에는 Worker와 CoreDNS가 Ready가 되지 않을 수 있다.
+# 이 Playbook은 Control Plane의 admin.conf와 sudo 권한을 사용한다.
 - name: Calico CNI 설치
   hosts: control_plane[0]
   become: true

@@ -1,10 +1,14 @@
 ---
+# NFS CSI Driver는 PVC 요청을 NFS 스토리지에 연결한다.
+# 전용 csi-nfs Namespace와 Controller Deployment·Node DaemonSet을 사용한다.
+# 공식 manifest 다운로드와 rollout 확인은 설치 스크립트에 위임한다.
 - name: Install NFS CSI addon
   hosts: localhost
   connection: local
   gather_facts: false
   tasks:
     - name: Run NFS CSI installer
+      # CSI Driver 설치에 관리 호스트의 kubectl과 curl을 사용한다.
       ansible.builtin.command:
         argv:
           - bash
