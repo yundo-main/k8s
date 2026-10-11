@@ -1,0 +1,85 @@
+---
+# 실행 순서 01: 모든 노드의 설치 전 상태를 읽기 전용으로 점검한다.
+# 실패한 조건을 먼저 해결한 뒤 다음 playbook을 실행한다.
+- name: Kubernetes 노드 사전 점검
+  hosts: all
+  gather_facts: true
+  become: true
+  become_method: sudo
+
+  # OS, 자원, swap, 시간 동기화와 sudo 권한을 확인한다.
+  tasks:
+    - name: 운영체제와 Python 정보를 출력한다.
+      ansible.builtin.debug:
+        msg:
+          - "노드: {{ inventory_hostname }} ({{ ansible_host | default(inventory_hostname) }})"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Kernel: {{ ansible_kernel }}"
+          - "Python: {{ ansible_python_version }}"
+          - "Architecture: {{ ansible_architecture }}"
+
+    - name: Python 3.9 이상인지 확인한다.
+      ansible.builtin.assert:
+        that:
+          - ansible_python_version is version('3.9', '>=')
+        fail_msg: "{{ inventory_hostname }}의 Python 버전이 3.9 미만입니다: {{ ansible_python_version }}"
+        success_msg: "{{ inventory_hostname }} Python 버전 확인: {{ ansible_python_version }}"
+
+    - name: CPU와 메모리 정보를 출력한다.
+      ansible.builtin.debug:
+        msg:
+          - "vCPU: {{ ansible_processor_vcpus }}"
+          - "Memory: {{ ansible_memtotal_mb }} MB"
+
+    - name: CPU와 메모리 최소 조건을 확인한다.
+      ansible.builtin.assert:
+        that:
+          - ansible_processor_vcpus | int >= 2
+          - ansible_memtotal_mb | int >= 2048
+        fail_msg: "{{ inventory_hostname }}의 CPU 또는 메모리가 최소 조건보다 작습니다."
+        success_msg: "{{ inventory_hostname }} CPU·메모리 조건 통과"
+
+    - name: 루트 파일시스템 여유 공간을 확인한다.
+      ansible.builtin.assert:
+        that:
+          - ansible_mounts | selectattr('mount', 'equalto', '/') | map(attribute='size_available') | first | int >= 20 * 1024 * 1024 * 1024
+        fail_msg: "{{ inventory_hostname }}의 루트 파일시스템 여유 공간이 20GiB 미만입니다."
+        success_msg: "{{ inventory_hostname }} 루트 파일시스템 여유 공간 조건 통과"
+
+    - name: 활성 swap 상태를 확인한다.
+      ansible.builtin.assert:
+        that:
+          - ansible_swaptotal_mb | int == 0
+        fail_msg: "{{ inventory_hostname }}에서 swap이 활성화되어 있습니다: {{ ansible_swaptotal_mb }} MB"
+        success_msg: "{{ inventory_hostname }} swap 비활성화 상태 확인"
+
+    - name: hostname 정보를 확인한다.
+      ansible.builtin.command: hostname --fqdn
+      register: hostname_result
+      changed_when: false
+
+    - name: hostname 결과를 출력한다.
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} hostname: {{ hostname_result.stdout }}"
+
+    - name: NTP 동기화 상태를 확인한다.
+      ansible.builtin.command: timedatectl show --property=NTPSynchronized --value
+      register: ntp_result
+      changed_when: false
+      failed_when: false
+
+    - name: NTP 상태를 출력한다.
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} NTP synchronized: {{ ntp_result.stdout | default('확인 불가') }}"
+
+    - name: sudo 권한으로 root 실행이 가능한지 확인한다.
+      ansible.builtin.command: id -u
+      register: root_uid
+      changed_when: false
+
+    - name: root 권한 결과를 확인한다.
+      ansible.builtin.assert:
+        that:
+          - root_uid.stdout | trim == '0'
+        fail_msg: "{{ inventory_hostname }}에서 sudo 권한으로 root 실행이 되지 않습니다."
+        success_msg: "{{ inventory_hostname }} sudo 권한 확인"

@@ -1,0 +1,9 @@
+# 가장 단순한 1 Pod·1 Container 예제
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  containers:
+    - name: nginx
+      image: jarrodkim/nginx-test:latest

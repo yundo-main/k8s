@@ -1,0 +1,14 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+# Kubernetes 인증정보와 로컬 kubeconfig
+**/dockerhub-secret.yml
+**/*secret*.local.yml
+**/kubeconfig
+
+# 로컬 도구·임시 출력
+.venv/
+*.log
+tmp/
+

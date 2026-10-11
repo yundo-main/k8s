@@ -1,0 +1,60 @@
+# 실행 순서 06: 첫 번째 Control Plane에서 kubeadm init을 1회 실행한다.
+# 이 작업은 클러스터를 생성하므로 실행 전 IP와 Pod CIDR을 반드시 확인한다.
+# admin.conf는 관리 사용자 kubeconfig로 복사되며 관리자 권한을 포함한다.
+- name: Control Plane 초기화
+  hosts: control_plane[0]
+  become: true
+  become_method: sudo
+  gather_facts: true
+
+  vars:
+    control_plane_advertise_address: "{{ ansible_host }}"
+    pod_network_cidr: "192.168.0.0/16"
+    kubeconfig_path: /etc/kubernetes/admin.conf
+
+  # kubeadm 초기화, kubeconfig 구성과 API Server 응답 확인을 수행한다.
+  tasks:
+    - name: Control Plane을 kubeadm으로 초기화한다.
+      ansible.builtin.command:
+        cmd: >-
+          kubeadm init
+          --apiserver-advertise-address={{ control_plane_advertise_address }}
+          --pod-network-cidr={{ pod_network_cidr }}
+        creates: "{{ kubeconfig_path }}"
+      register: kubeadm_init
+      changed_when: true
+
+    - name: kubeadm init 결과를 저장한다.
+      ansible.builtin.copy:
+        content: "{{ kubeadm_init.stdout }}\n{{ kubeadm_init.stderr }}"
+        dest: /root/kubeadm-init.log
+        owner: root
+        group: root
+        mode: '0600'
+      when: kubeadm_init is changed
+
+    - name: 관리 사용자용 kubeconfig 디렉터리를 만든다.
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/.kube"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0700'
+
+    - name: 관리 사용자에게 admin kubeconfig를 복사한다.
+      ansible.builtin.copy:
+        src: "{{ kubeconfig_path }}"
+        dest: "/home/{{ ansible_user }}/.kube/config"
+        remote_src: true
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+
+    - name: Kubernetes API Server 응답을 확인한다.
+      ansible.builtin.command: kubectl --kubeconfig={{ kubeconfig_path }} get nodes
+      register: control_plane_nodes
+      changed_when: false
+
+    - name: Control Plane 초기화 결과를 출력한다.
+      ansible.builtin.debug:
+        msg: "{{ control_plane_nodes.stdout_lines }}"

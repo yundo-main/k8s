@@ -1,0 +1,74 @@
+---
+# 실행 순서 04: 모든 노드에 containerd를 설치하고 systemd cgroup을 설정한다.
+# Kubernetes가 사용할 CRI 런타임을 설치한다.
+- name: containerd 설치 및 설정
+  hosts: all
+  become: true
+  become_method: sudo
+  gather_facts: true
+
+  # containerd 설치, cgroup 설정, 서비스 기동과 버전 확인을 수행한다.
+  tasks:
+    - name: apt 패키지 목록을 갱신한다.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: containerd를 설치한다.
+      ansible.builtin.apt:
+        name: containerd
+        state: present
+
+    - name: containerd 설정 디렉터리를 만든다.
+      ansible.builtin.file:
+        path: /etc/containerd
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: containerd 기본 설정을 생성한다.
+      ansible.builtin.command: containerd config default
+      register: containerd_default_config
+      changed_when: false
+
+    - name: systemd cgroup을 사용하는 containerd 설정을 적용한다.
+      ansible.builtin.copy:
+        dest: /etc/containerd/config.toml
+        content: "{{ containerd_default_config.stdout | replace('SystemdCgroup = false', 'SystemdCgroup = true') }}\n"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart containerd
+
+    - name: containerd 서비스를 활성화하고 시작한다.
+      ansible.builtin.systemd:
+        name: containerd
+        enabled: true
+        state: started
+
+    - name: 변경된 handler를 즉시 처리한다.
+      ansible.builtin.meta: flush_handlers
+
+    - name: containerd 서비스 상태를 확인한다.
+      ansible.builtin.command: systemctl is-active containerd
+      register: containerd_status
+      changed_when: false
+
+    - name: containerd 버전을 확인한다.
+      ansible.builtin.command: containerd --version
+      register: containerd_version
+      changed_when: false
+
+    - name: containerd 검증 결과를 출력한다.
+      ansible.builtin.debug:
+        msg:
+          - "{{ inventory_hostname }} service: {{ containerd_status.stdout }}"
+          - "{{ inventory_hostname }} version: {{ containerd_version.stdout }}"
+
+  handlers:
+    - name: restart containerd
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted
+        daemon_reload: true

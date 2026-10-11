@@ -1,0 +1,14 @@
+# 가장 단순한 1 Pod·2 Container 예제
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-fastapi-pod
+spec:
+  containers:
+    - name: nginx
+      # Storage·ConfigMap 이전 단계에서 사용하는 테스트 이미지
+      image: jarrodkim/nginx-test:latest
+    - name: fastapi
+      image: jarrodkim/fastapi-test:latest
+      ports:
+        - containerPort: 8000

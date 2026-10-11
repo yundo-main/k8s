@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1040" width="1400" height="1040" role="img" aria-labelledby="title desc">
+  <title id="title">Kubernetes Ansible 원격 설치 단계</title>
+  <desc id="desc">macOS 관리 호스트에서 SSH를 통해 Kubernetes 노드를 단계별로 준비하고 클러스터를 구성하는 흐름</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L11,5 L0,10 Z" fill="#475569"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".15"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="1040" fill="#f8fafc"/>
+  <text x="60" y="58" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#0f172a">Kubernetes 원격 설치 단계</text>
+  <text x="60" y="90" font-family="Arial,sans-serif" font-size="16" fill="#475569">macOS 관리 호스트 + Ansible + SSH를 기준으로 한 kubeadm 클러스터 구성 흐름</text>
+
+  <rect x="60" y="125" width="1280" height="140" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <text x="90" y="162" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#1d4ed8">0. 관리 호스트 준비</text>
+  <text x="90" y="197" font-family="Arial,sans-serif" font-size="15" fill="#1e3a8a">macOS · Python venv · Ansible · SSH 개인키</text>
+  <text x="90" y="226" font-family="Arial,sans-serif" font-size="15" fill="#1e3a8a">inventory/hosts.yml 작성 · 공개키를 각 노드에 1회 등록</text>
+  <text x="1090" y="197" font-family="Arial,sans-serif" font-size="15" fill="#1e3a8a">수동 준비</text>
+  <text x="1090" y="226" font-family="Arial,sans-serif" font-size="15" fill="#1e3a8a">SSH 신뢰 관계</text>
+
+  <path d="M700 265 V300" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="60" y="315" width="390" height="165" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="90" y="354" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#c2410c">1. 사전 점검</text>
+  <text x="90" y="388" font-family="Arial,sans-serif" font-size="15" fill="#7c2d12">preflight.yml</text>
+  <text x="90" y="416" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">OS · CPU · 메모리 · 디스크</text>
+  <text x="90" y="442" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">hostname · DNS · NTP · sudo</text>
+  <text x="90" y="468" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">ansible all -m ping</text>
+
+  <rect x="505" y="315" width="390" height="165" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="535" y="354" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#c2410c">2. 노드 기본 설정</text>
+  <text x="535" y="388" font-family="Arial,sans-serif" font-size="15" fill="#7c2d12">bootstrap.yml</text>
+  <text x="535" y="416" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">swap 비활성화</text>
+  <text x="535" y="442" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">커널 모듈 · sysctl · 방화벽</text>
+  <text x="535" y="468" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">모든 Control Plane·Worker 대상</text>
+
+  <rect x="950" y="315" width="390" height="165" rx="14" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="980" y="354" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#c2410c">3. 런타임·패키지</text>
+  <text x="980" y="388" font-family="Arial,sans-serif" font-size="15" fill="#7c2d12">containerd role</text>
+  <text x="980" y="416" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">containerd + systemd cgroup</text>
+  <text x="980" y="442" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">kubeadm · kubelet · kubectl</text>
+  <text x="980" y="468" font-family="Arial,sans-serif" font-size="14" fill="#7c2d12">버전과 저장소 고정</text>
+
+  <path d="M255 480 V520 H700 V550" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M700 480 V550" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M1145 480 V520 H700 V550" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="455" y="565" width="490" height="175" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="3" filter="url(#shadow)"/>
+  <text x="700" y="607" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#166534">4. Control Plane 초기화</text>
+  <text x="700" y="642" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#14532d">control-plane.yml</text>
+  <text x="700" y="670" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#14532d">10.10.10.150에서 kubeadm init 1회 실행</text>
+  <text x="700" y="697" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#14532d">kubeconfig와 Worker join 정보 보호·전달</text>
+  <text x="700" y="724" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#14532d">재실행 조건과 tag로 중복 초기화 방지</text>
+
+  <path d="M700 740 V775" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="60" y="795" width="390" height="165" rx="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="90" y="834" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#6d28d9">5. CNI 설치</text>
+  <text x="90" y="870" font-family="Arial,sans-serif" font-size="15" fill="#4c1d95">Cilium 또는 Calico 선택</text>
+  <text x="90" y="898" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">Pod 네트워크 구성</text>
+  <text x="90" y="926" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">CoreDNS 정상화 조건</text>
+
+  <rect x="505" y="795" width="390" height="165" rx="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="535" y="834" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#6d28d9">6. Worker 조인</text>
+  <text x="535" y="870" font-family="Arial,sans-serif" font-size="15" fill="#4c1d95">workers.yml</text>
+  <text x="535" y="898" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">10.10.10.151 · 10.10.10.152</text>
+  <text x="535" y="926" font-family="Arial,sans-serif" font-size="14" fill="#4c1d95">kubeadm join 실행</text>
+
+  <rect x="950" y="795" width="390" height="165" rx="14" fill="#ecfeff" stroke="#0891b2" stroke-width="2" filter="url(#shadow)"/>
+  <text x="980" y="834" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#0e7490">7. 최종 검증</text>
+  <text x="980" y="870" font-family="Arial,sans-serif" font-size="15" fill="#164e63">verify.yml</text>
+  <text x="980" y="898" font-family="Arial,sans-serif" font-size="14" fill="#164e63">모든 노드 Ready · CNI · CoreDNS</text>
+  <text x="980" y="926" font-family="Arial,sans-serif" font-size="14" fill="#164e63">Pod·Service 통신 · 재부팅 복구</text>
+</svg>

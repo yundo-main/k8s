@@ -1,0 +1,78 @@
+---
+# 실행 순서 02: swap·커널 모듈·sysctl을 적용하고 필요 시 재부팅한다.
+# Kubernetes가 요구하는 노드 공통 커널 및 네트워크 설정을 적용한다.
+- name: Kubernetes 노드 기본 설정
+  hosts: all
+  become: true
+  become_method: sudo
+  gather_facts: true
+
+  # 이 단계는 원격 노드의 시스템 설정을 변경한다.
+  tasks:
+    - name: 활성 swap을 비활성화한다.
+      ansible.builtin.command: swapoff -a
+      when: ansible_swaptotal_mb | int > 0
+      changed_when: true
+
+    - name: fstab의 swap 자동 마운트를 주석 처리한다.
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*\s+swap\s+.*)$'
+        replace: '# \\1'
+        backup: true
+
+    - name: Kubernetes에 필요한 커널 모듈 설정 파일을 만든다.
+      ansible.builtin.copy:
+        dest: /etc/modules-load.d/k8s.conf
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          overlay
+          br_netfilter
+
+    - name: overlay 커널 모듈을 즉시 로드한다.
+      ansible.builtin.command: modprobe overlay
+      changed_when: false
+
+    - name: br_netfilter 커널 모듈을 즉시 로드한다.
+      ansible.builtin.command: modprobe br_netfilter
+      changed_when: false
+
+    - name: Kubernetes 네트워크 sysctl 설정을 작성한다.
+      ansible.builtin.copy:
+        dest: /etc/sysctl.d/99-kubernetes-cri.conf
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          net.bridge.bridge-nf-call-iptables = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward = 1
+
+    - name: sysctl 설정을 즉시 적용한다.
+      ansible.builtin.command: sysctl --system
+      register: sysctl_result
+      changed_when: true
+
+    - name: 현재 노드 기본 설정을 확인한다.
+      ansible.builtin.command: free -h
+      register: memory_result
+      changed_when: false
+
+    - name: swap 비활성화 결과를 출력한다.
+      ansible.builtin.debug:
+        msg:
+          - "{{ inventory_hostname }} swap 상태: {{ ansible_swaptotal_mb }} MB"
+          - "{{ memory_result.stdout }}"
+
+    - name: 노드를 재부팅하고 설정의 지속성을 확인한다.
+      ansible.builtin.reboot:
+        msg: "Kubernetes bootstrap 설정 적용 후 재부팅"
+        reboot_timeout: 600
+        connect_timeout: 10
+        pre_reboot_delay: 5
+        post_reboot_delay: 15
+      when: bootstrap_reboot | default(false) | bool
+      tags:
+        - reboot

@@ -1,0 +1,16 @@
+FROM python:3.12-slim AS db-init-extractor
+
+COPY db.yml /tmp/db.yml
+
+RUN pip install --no-cache-dir --disable-pip-version-check PyYAML==6.0.2 \
+    && python -c 'import yaml; docs=yaml.safe_load_all(open("/tmp/db.yml", encoding="utf-8")); cm=next(doc for doc in docs if doc.get("kind") == "ConfigMap" and doc.get("metadata", {}).get("name") == "mariadb-initdb-config"); open("/tmp/init.sql", "w", encoding="utf-8").write(cm["data"]["init.sql"])'
+
+FROM mariadb:11
+
+# 테스트 전용 기본 데이터베이스 설정이다. 운영 환경에서는 Secret으로 주입한다.
+ENV MARIADB_ROOT_PASSWORD=rootpass \
+    MARIADB_DATABASE=fcgidb \
+    MARIADB_USER=fcgiuser \
+    MARIADB_PASSWORD=fcgipass
+
+COPY --from=db-init-extractor /tmp/init.sql /docker-entrypoint-initdb.d/init.sql

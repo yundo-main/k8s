@@ -1,0 +1,11 @@
+FROM python:3.12-slim AS frontend-extractor
+
+COPY frontend.yml /tmp/frontend.yml
+
+RUN pip install --no-cache-dir --disable-pip-version-check PyYAML==6.0.2 \
+    && python -c 'import os,yaml; docs=yaml.safe_load_all(open("/tmp/frontend.yml", encoding="utf-8")); cm=next(doc for doc in docs if doc.get("kind") == "ConfigMap" and doc.get("metadata", {}).get("name") == "frontend-html"); os.makedirs("/tmp/html", exist_ok=True); [open("/tmp/html/" + name, "w", encoding="utf-8").write(content) for name, content in cm["data"].items()]'
+
+FROM nginx:1.30.5-alpine3.24
+
+COPY --from=frontend-extractor /tmp/html/ /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d/default.conf
