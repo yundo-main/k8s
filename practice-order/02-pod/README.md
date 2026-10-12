@@ -11,24 +11,82 @@
 1컨테이너와 2컨테이너 예제는 구성 차이를 확인하고 실행하는 실습용이다.
 세부적인 프록시·API·데이터베이스 통신은 3컨테이너 예제에서 확인한다.
 
+## 사전 조건: 이미지 Pull Secret
+
+세 예제는 `jarrodkim/*-test:latest` 이미지를 사용하며, Pod의
+`spec.imagePullSecrets`에서 `jarrod-secret-test`를 참조한다. 먼저 01번 실습에서
+현재 Namespace에 Secret을 생성한다. Secret이 없으면 `ImagePullBackOff`가 발생할
+수 있다.
+
+```bash
+kubectl get secret jarrod-secret-test
+```
+
+Pod가 사용할 Docker Hub 인증 Secret이 현재 Namespace에 있는지 확인한다.
+
+```bash
+kubectl apply -f ../01-image-pull-secret/dockerhub-secret.yml
+```
+
+실제 토큰으로 작성한 Secret YAML을 적용한다. 템플릿 파일을 직접 적용하지 않는다.
+
 ### 1컨테이너
 
 ```bash
 kubectl apply -f 1container.yml
+```
+
+1컨테이너 Pod를 생성한다.
+
+```bash
 kubectl get pod nginx-pod -o wide
+```
+
+Pod의 실행 상태와 배치된 노드를 확인한다.
+
+```bash
 kubectl logs nginx-pod -c nginx
+```
+
+nginx 컨테이너 로그를 확인한다.
+
+```bash
 kubectl delete -f 1container.yml
 ```
+
+1컨테이너 Pod를 삭제한다.
 
 ### 2컨테이너
 
 ```bash
 kubectl apply -f 2container.yml
+```
+
+nginx와 FastAPI가 함께 있는 2컨테이너 Pod를 생성한다.
+
+```bash
 kubectl get pod nginx-fastapi-pod -o wide
+```
+
+2컨테이너 Pod의 상태와 배치된 노드를 확인한다.
+
+```bash
 kubectl logs nginx-fastapi-pod -c nginx
+```
+
+nginx 컨테이너 로그를 확인한다.
+
+```bash
 kubectl logs nginx-fastapi-pod -c fastapi
+```
+
+FastAPI 컨테이너 로그를 확인한다.
+
+```bash
 kubectl delete -f 2container.yml
 ```
+
+2컨테이너 Pod를 삭제한다.
 
 ## 3컨테이너 Pod 실행
 
@@ -44,31 +102,64 @@ kubectl delete -f 2container.yml
 
 ```bash
 kubectl apply -f 3container.yml
+```
+
+nginx, FastAPI, MariaDB가 함께 있는 3컨테이너 Pod를 생성한다.
+
+```bash
 kubectl get pod nginx-fastapi-pod -o wide
+```
+
+세 컨테이너를 포함한 Pod의 실행 상태와 배치 노드를 확인한다.
+
+```bash
 kubectl describe pod nginx-fastapi-pod
 ```
+
+컨테이너 상태, 이벤트, 볼륨과 네트워크 설정을 상세 확인한다.
 
 컨테이너별 로그 확인:
 
 ```bash
 kubectl logs nginx-fastapi-pod -c nginx
+```
+
+nginx 컨테이너 로그를 확인한다.
+
+```bash
 kubectl logs nginx-fastapi-pod -c fastapi
+```
+
+FastAPI 컨테이너 로그를 확인한다.
+
+```bash
 kubectl logs nginx-fastapi-pod -c mariadb
 ```
+
+MariaDB 컨테이너 로그를 확인한다.
 
 로컬에서 nginx에 접근:
 
 ```bash
 kubectl port-forward pod/nginx-fastapi-pod 8080:80
-# 별도 터미널에서
+```
+
+로컬 포트 `8080`을 Pod의 nginx 포트 `80`으로 연결한다. 이 명령은 실행 중인
+터미널을 계속 사용하므로 별도 터미널에서 다음 명령을 실행한다.
+
+```bash
 curl http://127.0.0.1:8080
 ```
+
+Port-forward 경로를 통해 nginx 응답을 확인한다.
 
 실습 종료:
 
 ```bash
 kubectl delete -f 3container.yml
 ```
+
+3컨테이너 Pod를 삭제한다.
 
 이 예제는 `3container.yml`로 Pod 하나를 직접 실행하는 학습용 구성이다.
 장애 복구, 롤링 업데이트, 스케일링이 필요한 실제 서비스는 `Deployment` 사용을

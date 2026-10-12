@@ -2,6 +2,11 @@
 
 변경되는 Pod IP 대신 고정된 네트워크 엔드포인트를 제공한다.
 
+![Service 구조](./service-overview.svg)
+
+Service와 Headless Service의 연결 흐름은 [Service 구조 SVG](./service-overview.svg)에서
+확인한다.
+
 MariaDB StatefulSet에서 사용할 Headless Service 예제:
 
 - [`service.yml`](./service.yml)

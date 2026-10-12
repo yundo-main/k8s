@@ -1,8 +1,7 @@
 # 3-Tier 애플리케이션
 
 초기 이미지와 앞 단계의 ConfigMap·Secret을 연결해 3-Tier 구조를 구성한다.
-테스트용 DB는 이 디렉터리의 `database.yml`로 함께 실행하고, 영속 저장소를
-사용하는 확장 구성은 09 StatefulSet을 선택한다.
+Database는 09번 StatefulSet 구성을 적용해 `nfs-csi` PVC에 저장한다.
 
 이 실습은 애플리케이션을 미리 포함한 통합 이미지가 아니라 기본 런타임 이미지에
 ConfigMap의 코드와 파일을 주입해 실행한다.
@@ -11,20 +10,20 @@ ConfigMap의 코드와 파일을 주입해 실행한다.
 | --- | --- | --- |
 | Frontend | `nginx:stable` + HTML ConfigMap | `frontend:80` |
 | Backend | `python:3.12-slim` + `main.py` ConfigMap | `fastcgi-backend:8000` |
-| Database | `mariadb:11` | `mariadb:3306` |
+| Database | `mariadb:11` + StatefulSet·PVC | `mariadb:3306` |
 
-- [테스트용 Database manifest](./database.yml)
+- [3-Tier Database manifest](./database.yml)
 
 Backend 컨테이너는 시작할 때 실습에 필요한 `fastapi`, `uvicorn`, `pymysql`,
 `python-multipart` 패키지를 설치한 뒤 ConfigMap의 `main.py`를 실행한다.
 따라서 인터넷이 연결된 클러스터에서 실행해야 하며, 운영 환경에서는 별도의
 의존성 이미지 또는 패키지 캐시를 사용한다.
 
-`database.yml`은 테스트용 MariaDB Deployment와 ClusterIP Service를 제공한다.
-저장소는 `emptyDir`이므로 Pod가 다시 생성되면 데이터가 초기화된다. 영속 저장소와
-Headless Service가 필요한 경우에는 [`09-statefulset`](../09-statefulset/README.md)을
-사용한다. 두 DB 구성을 동시에 적용하지 않는다. 외부 노출은 다음 11단계 Ingress
-실습에서 구성한다.
+`database.yml`은 MariaDB StatefulSet, `nfs-csi` PVC, Headless Service를 제공한다.
+따라서 08번 NFS CSI 실습과 `nfs-server`가 먼저 준비되어 있어야 한다. MariaDB
+Pod는 `mariadb-0`이라는 고정 이름을 사용하고, 데이터는
+`mariadb-data-mariadb-0` PVC에 저장된다. 외부 노출은 다음 11단계 Ingress 실습에서
+구성한다.
 
 ## 실습 구조
 
@@ -36,32 +35,107 @@ Headless Service가 필요한 경우에는 [`09-statefulset`](../09-statefulset/
 
 1. `mariadb-secret`: MariaDB 인증정보
 2. `mariadb-initdb`: 초기화 SQL ConfigMap
+3. `nfs-csi`: NFS CSI StorageClass와 실행 중인 NFS Server
 
 애플리케이션 Secret은 [`07-secret`](../07-secret/README.md), 초기화 SQL은
 [`06-configmap`](../06-configmap/README.md)에서 만든다. Frontend와 Backend
 ConfigMap은 각 계층 manifest에 포함되어 있다.
 
+09번에서 만든 공통 리소스를 아직 만들지 않았다면 먼저 각각 적용한다.
+
+```bash
+kubectl apply -f ../07-secret/secret.yml
+```
+
+MariaDB 인증정보 Secret을 생성한다.
+
+```bash
+kubectl apply -f ../06-configmap/configmap.yml
+```
+
+MariaDB 초기화 SQL ConfigMap을 생성한다.
+
+08번 NFS CSI 실습에서 `nfs-csi` StorageClass와 `nfs-server`가 실행 중인지
+확인한다. 이 3-Tier 구성은 `emptyDir`로 대체하지 않는다.
+
+```bash
+kubectl get storageclass nfs-csi
+```
+
+MariaDB PVC가 사용할 `nfs-csi` StorageClass가 존재하는지 확인한다.
+
+```bash
+kubectl get pod nfs-server
+```
+
+NFS Server Pod가 실행 중인지 확인한다. 이 Pod가 없으면 StatefulSet의 PVC가
+`Pending` 상태로 남을 수 있다.
+
 ## 적용
+
+기존 10번 구성에서 `mariadb` Deployment와 ClusterIP Service가 이미 실행 중이면
+새 StatefulSet·Headless Service와 이름이 충돌할 수 있다. 먼저 기존 상태를 확인하고,
+실습 데이터가 필요하면 백업한 뒤 기존 DB 구성을 정리하고 적용한다. 새 구성은
+`mariadb-0`과 `mariadb-data-mariadb-0` PVC를 사용한다.
+
+```bash
+kubectl get deployment mariadb
+```
+
+기존 MariaDB Deployment가 있는지 확인한다.
+
+```bash
+kubectl get service mariadb
+```
+
+기존 MariaDB Service의 타입을 확인한다. 기존 Service가 ClusterIP이면 Headless
+Service로 자동 전환되지 않으므로 별도 정리가 필요하다.
 
 ```bash
 kubectl apply -f database.yml
+```
+
+MariaDB StatefulSet, PVC, Headless Service를 생성한다.
+
+```bash
 kubectl apply -f frontend.yml
+```
+
+Frontend Deployment, ConfigMap, Service를 생성한다.
+
+```bash
 kubectl apply -f backend.yml
 ```
+
+Backend Deployment, ConfigMap, Service를 생성한다.
 
 상태와 내부 Service를 확인한다.
 
 ```bash
 kubectl get deployment,pod,service -l app=frontend
+```
+
+Frontend 리소스 상태를 확인한다.
+
+```bash
 kubectl get deployment,pod,service -l app=fastcgi-backend
+```
+
+Backend 리소스 상태를 확인한다.
+
+```bash
 kubectl get service frontend fastcgi-backend mariadb
 ```
 
-테스트용 MariaDB Pod 상태는 다음 명령으로 확인한다.
+3개 계층의 Service가 생성되었는지 확인한다.
+
+MariaDB StatefulSet과 Pod 상태는 다음 명령으로 확인한다.
 
 ```bash
-kubectl get pod -l app=mariadb
+kubectl get statefulset,pod,pvc -l app=mariadb
 ```
+
+`mariadb-0`이 `Running`, PVC가 `Bound`인지 확인한다.
 
 Backend Pod에서 MariaDB Service DNS로 연결되는지 확인한다.
 
@@ -80,12 +154,30 @@ kubectl get service frontend fastcgi-backend mariadb -o wide
 
 ```bash
 kubectl delete -f backend.yml
+```
+
+Backend 리소스를 삭제한다.
+
+```bash
 kubectl delete -f frontend.yml
+```
+
+Frontend 리소스를 삭제한다.
+
+```bash
 kubectl delete -f database.yml
 ```
 
-`database.yml`은 테스트용 `emptyDir` DB이므로 삭제하면 데이터도 함께 삭제된다.
-09 StatefulSet을 선택한 경우에는 이 파일을 적용하지 않는다.
+테스트용 MariaDB 리소스를 삭제한다.
+
+`database.yml`을 삭제해도 StatefulSet이 생성한 PVC는 데이터 보존을 위해 남는다.
+데이터까지 삭제하려면 StatefulSet Pod와 연결된 PVC를 별도로 삭제한다.
+
+```bash
+kubectl delete pvc mariadb-data-mariadb-0
+```
+
+이 명령은 MariaDB 영속 데이터를 삭제한다.
 
 ## 원본 예제와의 관계
 

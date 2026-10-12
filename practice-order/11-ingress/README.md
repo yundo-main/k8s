@@ -19,10 +19,27 @@ Controller가 설치되어 있지 않다면 먼저
 
 ```bash
 cd /Users/jarrod/project/code-test-check/k8s
+```
+
+저장소 루트로 이동한다.
+
+```bash
 export KUBECONFIG=/Users/jarrod/.kube/k8s-config
+```
+
+현재 터미널에서 사용할 kubeconfig를 지정한다.
+
+```bash
 kubectl config current-context
+```
+
+현재 선택된 Kubernetes context를 확인한다.
+
+```bash
 kubectl get nodes
 ```
+
+클러스터 노드가 `Ready`인지 확인한다.
 
 모든 노드가 `Ready`인지 확인한다.
 
@@ -44,15 +61,46 @@ ansible-playbook -i install/inventory/hosts.yml \
 
 ### 3. Controller 설치 검증
 
+#### 3-1. Deployment 준비 상태 대기
+
 ```bash
 kubectl -n ingress-nginx wait \
   --for=condition=available deployment/ingress-nginx-controller \
   --timeout=180s
+```
+
+Deployment가 `Available` 상태가 될 때까지 최대 180초 동안 기다린다. 이 명령이
+성공해야 Controller Pod의 준비 상태를 다음 단계에서 확인할 수 있다.
+
+#### 3-2. Controller Pod 확인
+
+```bash
 kubectl -n ingress-nginx get pods \
   -l app.kubernetes.io/component=controller
+```
+
+`ingress-nginx` Namespace의 Controller Pod를 Label로 조회한다. Pod 이름은
+ReplicaSet 해시에 따라 바뀔 수 있으므로 고정 Pod 이름 대신 Label Selector를
+사용한다. `READY`가 `1/1`, `STATUS`가 `Running`인지 확인한다.
+
+#### 3-3. IngressClass 확인
+
+```bash
 kubectl get ingressclass nginx
+```
+
+클러스터 범위의 `IngressClass/nginx`가 존재하는지 확인한다. Ingress YAML의
+`spec.ingressClassName: nginx`와 이 리소스가 연결되어야 NGINX Controller가
+Ingress를 처리한다.
+
+#### 3-4. Controller Service 확인
+
+```bash
 kubectl -n ingress-nginx get svc ingress-nginx-controller
 ```
+
+`ingress-nginx-controller` Service가 존재하고 `TYPE`이 `NodePort`인지 확인한다.
+HTTP 포트는 `80:30198/TCP`로 표시되어야 한다.
 
 정상 기준:
 
@@ -70,9 +118,21 @@ IngressClass가 설치되어 있는지 확인한다.
 ```bash
 kubectl -n ingress-nginx get pods \
   -l app.kubernetes.io/component=controller
+```
+
+Controller Pod가 현재 실행 중인지 다시 확인한다.
+
+```bash
 kubectl get ingressclass nginx
+```
+
+Ingress가 사용할 `nginx` IngressClass가 등록되어 있는지 확인한다.
+
+```bash
 kubectl -n ingress-nginx get svc ingress-nginx-controller
 ```
+
+외부 요청을 받을 Controller Service와 NodePort를 확인한다.
 
 현재 실습 클러스터의 Controller Service는 다음 NodePort를 사용한다.
 
@@ -90,16 +150,35 @@ HTTPS 443:31476/TCP (TLS 설정 전)
 
 ```bash
 kubectl apply -f practice-order/10-3tier/
+```
+
+Frontend, Backend, MariaDB를 포함한 3-Tier 리소스를 적용한다.
+
+```bash
 kubectl get service frontend fastcgi-backend
 ```
+
+Ingress가 연결할 Frontend와 Backend Service가 존재하는지 확인한다.
 
 그 다음 이 단계의 Ingress 리소스를 적용한다.
 
 ```bash
 kubectl apply -f practice-order/11-ingress/ingress.yml
+```
+
+`/`와 `/api/` 경로를 Service로 전달하는 Ingress 리소스를 생성한다.
+
+```bash
 kubectl get ingress fastcgi-ingress
+```
+
+Ingress의 주소와 생성 상태를 요약해 확인한다.
+
+```bash
 kubectl describe ingress fastcgi-ingress
 ```
+
+Ingress 규칙, Backend Service, 이벤트를 상세 확인한다.
 
 라우팅:
 
@@ -120,8 +199,15 @@ http://10.10.10.152:30198/login.html
 
 ```bash
 curl -i http://10.10.10.150:30198/login.html
+```
+
+NodePort를 통해 Frontend 로그인 페이지가 외부에서 응답하는지 확인한다.
+
+```bash
 curl -i http://10.10.10.150:30198/api/
 ```
+
+`/api/` 요청이 Backend Service 경로로 전달되는지 확인한다.
 
 현재 `frontend-html` ConfigMap에는 `login.html`과 `register.html`만 있으므로
 루트 경로(`/`)는 NGINX의 `index.html` 부재로 `403`이 반환될 수 있다. 이는
@@ -136,10 +222,27 @@ Ingress 라우팅 실패가 아니며, 다음 경로로 Frontend를 확인한다
 
 ```bash
 kubectl get ingress fastcgi-ingress
+```
+
+Ingress 리소스가 정상 생성되었는지 확인한다.
+
+```bash
 kubectl get service frontend fastcgi-backend
+```
+
+Frontend와 Backend Service가 존재하고 올바른 포트를 사용하는지 확인한다.
+
+```bash
 kubectl get endpoints frontend fastcgi-backend
+```
+
+두 Service에 실제 Pod Endpoint가 연결되었는지 확인한다.
+
+```bash
 kubectl -n ingress-nginx logs deployment/ingress-nginx-controller
 ```
+
+Controller가 기록한 라우팅 오류와 Backend 연결 오류를 확인한다.
 
 현재 실습은 HTTP만 검증한다. HTTPS는 인증서 Secret과 `spec.tls`를 구성한 뒤
 별도 실습으로 추가한다.

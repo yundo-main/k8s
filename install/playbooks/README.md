@@ -2,6 +2,9 @@
 
 모든 명령은 `k8s/install` 디렉터리에서 실행한다.
 
+> 이 설치 실습의 대상 클러스터는 ARM64 기반이다. 이미지나 Addon을 추가할 때
+> ARM64 지원 여부를 먼저 확인하고, AMD64 전용 이미지는 사용하지 않는다.
+
 ## Ansible 기본 구조
 
 이 디렉터리에서는 관리 호스트가 `inventory`에 정의된 Kubernetes 노드에
@@ -59,6 +62,30 @@ export K8S_SSH_KEY="${K8S_SSH_KEY:-$HOME/.ssh/k8s_ed25519}"
 
 `install/inventory/hosts.yml`은 같은 변수를 사용하므로, 환경변수를 설정한
 터미널에서 Ansible 명령을 실행해야 한다.
+
+노드 아키텍처는 사전 점검 결과와 Kubernetes 노드 정보로 확인한다.
+
+```bash
+uname -m
+```
+
+관리 호스트의 CPU 아키텍처를 확인한다.
+
+```bash
+ansible all -i inventory/hosts.yml -m setup -a 'filter=ansible_architecture'
+```
+
+Ansible이 확인한 각 노드의 아키텍처를 조회한다.
+
+```bash
+kubectl get nodes -o custom-columns=NAME:.metadata.name,ARCH:.status.nodeInfo.architecture
+```
+
+Kubernetes Node 오브젝트에 기록된 아키텍처를 확인한다.
+
+ARM64 노드는 일반적으로 `aarch64` 또는 `arm64`로 표시된다. 컨테이너 이미지가
+ARM64 manifest를 제공하지 않으면 이미지 Pull 이후 `exec format error`가 발생할
+수 있으므로, 배포 전에 이미지 플랫폼을 확인한다.
 
 ## 01. 사전 점검
 
@@ -167,8 +194,15 @@ CSR(`CertificateSigningRequest`)은 kubelet이 자신의 HTTPS Serving Certifica
 
 ```bash
 kubectl get csr
+```
+
+현재 클러스터의 CSR 목록과 승인 상태를 확인한다.
+
+```bash
 kubectl get csr -o wide
 ```
+
+CSR의 요청자, 인증서 상태와 추가 정보를 넓은 형식으로 확인한다.
 
 `Pending` 상태인 CSR 중 `kubernetes.io/kubelet-serving` 서명 요청만 선택한다.
 다음 항목을 확인한 뒤 승인한다.
@@ -182,15 +216,63 @@ kubectl get csr -o wide
 
 ```bash
 kubectl describe csr <serving-csr-name>
+```
+
+선택한 Serving CSR의 요청 내용과 Subject·SAN을 상세 확인한다.
+
+```bash
 kubectl certificate approve <serving-csr-name>
 ```
+
+검토가 끝난 CSR 하나를 승인한다.
 
 승인 후 인증서가 발급되었는지 확인한다.
 
 ```bash
 kubectl get csr <serving-csr-name> -o wide
+```
+
+승인된 CSR의 `Approved`·`Issued` 상태를 확인한다.
+
+```bash
 kubectl describe csr <serving-csr-name>
 ```
+
+발급 결과와 CSR 이벤트를 상세 확인한다.
+
+### CSR 일괄 승인
+
+노드가 여러 대이거나 kubelet이 재시작되어 동일한 Serving CSR이 여러 개
+생성되었을 때 사용할 수 있다. 모든 CSR을 무조건 승인하지 말고,
+`kubernetes.io/kubelet-serving` 서명자이면서 `Pending`인 요청만 대상으로 한다.
+
+먼저 일괄 승인 대상을 출력한다.
+
+```bash
+kubectl get csr --no-headers | \
+  awk '$3 == "kubernetes.io/kubelet-serving" && $6 == "Pending" {print $1}'
+```
+
+출력된 CSR의 요청자와 노드가 모두 현재 클러스터의 kubelet인지 확인한다.
+알 수 없는 요청자, 외부 주소, `Denied` 상태의 요청은 승인하지 않는다.
+
+검토가 끝난 Pending Serving CSR만 일괄 승인한다.
+
+```bash
+for csr in $(kubectl get csr --no-headers | \
+  awk '$3 == "kubernetes.io/kubelet-serving" && $6 == "Pending" {print $1}'); do
+  kubectl certificate approve "$csr"
+done
+```
+
+각 노드의 최신 CSR만 승인하고 오래된 중복 CSR은 보류할 수도 있다. 일괄 승인
+후에는 발급 상태를 확인한다.
+
+```bash
+kubectl get csr
+```
+
+승인된 요청에 `Approved,Issued`가 표시되어야 한다.
 
 정상적인 CSR은 `Approved`와 `Issued` 상태를 확인할 수 있다. 모든 노드의
 Serving Certificate가 발급된 뒤 Metrics Server를 설치한다. Metrics Server에서
@@ -203,28 +285,57 @@ Python 가상환경은 `kubectl`을 설치하지 않으므로 Mac에 별도로 �
 
 ```bash
 brew install kubectl
+```
+
+Mac 관리 호스트에 kubectl을 설치한다.
+
+```bash
 kubectl version --client
 ```
+
+설치된 kubectl 클라이언트 버전을 확인한다.
 
 Control Plane에서 관리 사용자용 kubeconfig를 복사한다.
 
 ```bash
 mkdir -p ~/.kube
+```
 
+관리 호스트의 kubeconfig 디렉터리를 준비한다.
+
+```bash
 scp -i "$K8S_SSH_KEY" \
   "$K8S_SSH_USER@10.10.10.150:/home/$K8S_SSH_USER/.kube/config" \
   ~/.kube/k8s-config
+```
 
+Control Plane의 관리자 kubeconfig를 관리 호스트로 복사한다.
+
+```bash
 chmod 600 ~/.kube/k8s-config
+```
+
+kubeconfig에 관리자 외 사용자가 접근하지 못하도록 권한을 설정한다.
+
+```bash
 export KUBECONFIG=$HOME/.kube/k8s-config
 ```
+
+현재 터미널에서 사용할 kubeconfig 경로를 지정한다.
 
 클러스터 연결을 확인한다.
 
 ```bash
 kubectl get nodes -o wide
+```
+
+클러스터의 노드 상태와 주소를 확인한다.
+
+```bash
 kubectl get pods -A
 ```
+
+모든 Namespace의 Pod 상태를 확인한다.
 
 매번 환경 변수를 입력하지 않으려면 zsh 설정에 등록한다.
 

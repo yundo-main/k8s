@@ -16,7 +16,7 @@ Chapter 1에서 구성한 3-Tier 애플리케이션을 외부에 노출하고, �
 | 13 | [Probe·Scale](../13-probe-scale/README.md) |
 | 14 | [Security](../14-security/README.md) |
 | 15 | [Batch](../15-batch/README.md) |
-| 16 | [DaemonSet](../16-daemonset/README.md) |
+| 16 | [DaemonSet·Node Exporter·Prometheus·Grafana](../16-daemonset/README.md) |
 | 17 | [Cluster-scoped Resource](../17-cluster-scoped/README.md) |
 | 18 | [Extension](../18-extension/README.md) |
 

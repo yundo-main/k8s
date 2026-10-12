@@ -17,17 +17,42 @@ CPU·메모리 또는 사용자 정의 메트릭에 따라 Deployment나 Statefu
 
 ```bash
 kubectl get apiservice v1beta1.metrics.k8s.io
+```
+
+Metrics Server APIService가 `Available=True`인지 확인한다.
+
+```bash
 kubectl top pods
 ```
+
+Pod별 CPU·메모리 사용량을 조회해 Metrics Server가 실제 메트릭을 제공하는지
+확인한다.
 
 Backend Deployment를 적용한 뒤 HPA를 적용한다.
 
 ```bash
 kubectl apply -f ../backend-operational.yml
+```
+
+Probe와 리소스 requests/limits가 포함된 Backend Deployment를 적용한다.
+
+```bash
 kubectl apply -f backend-hpa.yml
+```
+
+Backend Deployment를 대상으로 HPA를 생성한다.
+
+```bash
 kubectl get hpa fastcgi-backend-hpa
+```
+
+HPA의 현재 replica와 metric 상태를 요약해 확인한다.
+
+```bash
 kubectl describe hpa fastcgi-backend-hpa
 ```
+
+HPA의 확장 조건, metric 조회 결과와 이벤트를 상세 확인한다.
 
 HPA는 CPU 사용률이 60%를 넘으면 `fastcgi-backend` Pod를 최대 3개까지
 확장한다. MariaDB StatefulSet은 데이터 일관성을 위해 이 기본 실습의 HPA

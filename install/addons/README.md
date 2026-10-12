@@ -8,11 +8,33 @@ Ansible Playbook을 사용한다. 이 문서는 Addon별 선행조건과 검증 
 
 ```bash
 export KUBECONFIG="$HOME/.kube/k8s-config"
+```
+
+현재 터미널에서 사용할 클러스터 접속 설정을 지정한다.
+
+```bash
 kubectl get nodes -o wide
+```
+
+모든 노드의 Ready 상태와 노드 IP·아키텍처를 확인한다.
+
+```bash
 kubectl get pods -A
+```
+
+모든 Namespace의 시스템 Pod 상태를 확인한다.
+
+```bash
 kubectl get --raw='/readyz?verbose'
+```
+
+Kubernetes API Server의 세부 준비 상태를 확인한다.
+
+```bash
 bash operations/cluster/check-architecture.sh
 ```
+
+실행 환경의 CPU 아키텍처와 이미지 호환성을 점검한다.
 
 모든 노드가 `Ready`이고 Calico·CoreDNS가 정상이어야 Addon 설치를 시작한다.
 실습 이미지와 노드 아키텍처가 다르면 컨테이너가 `exec format error`로 실패할
@@ -34,22 +56,61 @@ Metrics Server는 선택형 Addon이므로 필요한 실습 전에 설치한다.
 
 ## 3. 설치 완료 판정
 
+### CNI·Calico
+
 ```bash
-# CNI
 kubectl -n calico-system get pods
+```
 
-# NFS CSI
+Calico 구성 Pod가 정상 실행 중인지 확인한다.
+
+### NFS CSI Pod
+
+```bash
 kubectl -n csi-nfs get pods
+```
+
+NFS CSI Driver 구성 Pod 상태를 확인한다.
+
+### NFS CSI Driver 등록
+
+```bash
 kubectl get csidriver nfs.csi.k8s.io
+```
 
-# Ingress
+클러스터에 NFS CSI Driver 리소스가 등록되었는지 확인한다.
+
+### IngressClass
+
+```bash
 kubectl get ingressclass nginx
-kubectl -n ingress-nginx get svc ingress-nginx-controller
+```
 
-# Metrics Server
+Ingress가 사용할 `nginx` IngressClass가 등록되었는지 확인한다.
+
+### Ingress Controller Service
+
+```bash
+kubectl -n ingress-nginx get svc ingress-nginx-controller
+```
+
+외부 접근에 사용할 Ingress Controller의 Service와 NodePort를 확인한다.
+
+### Metrics API
+
+```bash
 kubectl get apiservice v1beta1.metrics.k8s.io
+```
+
+Metrics Server APIService가 `Available=True`인지 확인한다.
+
+### Node metrics
+
+```bash
 kubectl top nodes
 ```
+
+노드 CPU·메모리 사용량을 조회해 Metrics Server가 실제로 응답하는지 확인한다.
 
 해당 실습에 필요한 확인 항목이 준비되지 않았으면 실습 리소스를 적용하지
 않는다. 현재 테스트 클러스터에는 NFS CSI Driver와 `IngressClass/nginx`가

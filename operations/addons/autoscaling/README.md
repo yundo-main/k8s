@@ -10,7 +10,15 @@ Metrics Server는 기본 Kubernetes 설치와 별도로 준비한다.
 ```bash
 ansible-playbook -i install/inventory/hosts.yml \
   install/playbooks/addons/metrics-server.yml
+```
+
+Metrics Server Addon을 설치한다.
+
+```bash
 bash ./operations/addons/autoscaling/check-metrics-server.sh
+```
+
+Metrics Server의 설치 상태와 API 응답을 점검한다.
 ```
 
 설치 Playbook은 kubelet에 `serverTLSBootstrap: true`를 설정한다. Serving CSR을
@@ -32,10 +40,28 @@ METRICS_SERVER_INSECURE_TLS=true \
 
 ```bash
 kubectl get deployment metrics-server -n kube-system
+```
+
+Metrics Server Deployment가 원하는 replica와 Available 상태를 만족하는지
+확인한다.
+
+```bash
 kubectl get apiservice v1beta1.metrics.k8s.io
+```
+
+Metrics APIService의 `AVAILABLE=True` 여부를 확인한다.
+
+```bash
 kubectl top nodes
+```
+
+노드 CPU·메모리 메트릭이 조회되는지 확인한다.
+
+```bash
 kubectl top pods -A
 ```
+
+모든 Namespace의 Pod 메트릭이 조회되는지 확인한다.
 
 `kubectl top`이 정상적으로 결과를 반환해야 HPA 메트릭을 사용할 수 있다.
 
@@ -43,9 +69,21 @@ kubectl top pods -A
 
 ```bash
 kubectl get pods -n kube-system -l k8s-app=metrics-server
+```
+
+Metrics Server Pod의 Ready 상태와 재시작 횟수를 확인한다.
+
+```bash
 kubectl describe apiservice v1beta1.metrics.k8s.io
+```
+
+Metrics APIService의 Endpoint, 인증서, 연결 오류를 상세 확인한다.
+
+```bash
 kubectl logs -n kube-system deploy/metrics-server
 ```
+
+Metrics Server가 kubelet 메트릭을 수집하지 못한 원인을 로그에서 확인한다.
 
 ## 구성요소 구분
 

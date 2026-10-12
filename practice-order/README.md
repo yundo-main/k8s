@@ -48,7 +48,7 @@
   ↓
 15 Batch Workload
   ↓
-16 DaemonSet
+16 DaemonSet·Node Exporter·Prometheus·Grafana
   ↓
 17 Cluster-scoped Resource
   ↓
@@ -75,9 +75,21 @@ Addons·Operations
 
 ```bash
 kubectl get nodes -o wide
+```
+
+모든 노드의 Ready 상태와 주소를 확인한다.
+
+```bash
 kubectl get pods -A
+```
+
+시스템 Pod와 Addon Pod의 상태를 확인한다.
+
+```bash
 kubectl get events -A --sort-by=.lastTimestamp
 ```
+
+최근 클러스터 이벤트를 시간순으로 확인한다.
 
 모든 노드가 `Ready`이고 CNI 관련 Pod가 정상이어야 다음 단계로 진행한다.
 
@@ -125,16 +137,32 @@ Chapter 1은 01~10단계, Chapter 2는 11~18단계로 구성한다.
 ```bash
 read -s DOCKER_PAT
 echo
+```
 
+`read`로 Docker Hub PAT를 입력받고, `echo`로 입력 줄을 종료한다. PAT는 화면에
+표시되지 않는다.
+
+```bash
 kubectl create secret docker-registry jarrod-secret-test \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=jarrodkim \
   --docker-password="$DOCKER_PAT" \
   --docker-email='YOUR_EMAIL'
+```
 
+현재 Namespace에 이미지 Pull Secret을 생성한다.
+
+```bash
 unset DOCKER_PAT
+```
+
+터미널에서 PAT 환경변수를 제거한다.
+
+```bash
 kubectl get secret jarrod-secret-test
 ```
+
+이미지 Pull Secret이 생성되었는지 확인한다.
 
 이 Secret은 이미지 Pull 인증용이다. MariaDB 비밀번호용 Secret은 07단계에서
 별도로 사용한다. Secret은 Namespace별로 생성해야 한다.
@@ -158,9 +186,21 @@ Storage·ConfigMap 이전 단계는 설정이 이미지에 포함된 테스트 �
 
 ```bash
 kubectl apply -f k8s/practice-order/02-pod/1container.yml
+```
+
+단일 컨테이너 Pod를 생성한다.
+
+```bash
 kubectl get pod -o wide
+```
+
+Pod 상태와 배치된 노드를 확인한다.
+
+```bash
 kubectl delete -f k8s/practice-order/02-pod/1container.yml
 ```
+
+단일 컨테이너 Pod를 삭제한다.
 
 2컨테이너와 3컨테이너 예제는 [02-pod](./02-pod/)에서 확인한다.
 
@@ -170,10 +210,27 @@ kubectl delete -f k8s/practice-order/02-pod/1container.yml
 
 ```bash
 kubectl apply -f k8s/practice-order/03-replicaset/nginx.yml
+```
+
+ReplicaSet을 생성한다.
+
+```bash
 kubectl get rs,pods -l app=nginx-replicaset
+```
+
+ReplicaSet과 관리 대상 Pod를 확인한다.
+
+```bash
 kubectl scale rs nginx-replicaset --replicas=5
+```
+
+ReplicaSet의 Pod 수를 5개로 변경한다.
+
+```bash
 kubectl delete -f k8s/practice-order/03-replicaset/nginx.yml
 ```
+
+ReplicaSet과 Pod를 삭제한다.
 
 ## 04. Deployment
 
@@ -182,11 +239,33 @@ kubectl delete -f k8s/practice-order/03-replicaset/nginx.yml
 
 ```bash
 kubectl apply -f k8s/practice-order/04-deployment/nginx.yml
+```
+
+Deployment를 생성한다.
+
+```bash
 kubectl rollout status deployment/nginx-deployment
+```
+
+Deployment의 현재 배포가 완료될 때까지 기다린다.
+
+```bash
 kubectl get deployment,rs,pods -l app=nginx-deployment
+```
+
+Deployment와 ReplicaSet, Pod 상태를 확인한다.
+
+```bash
 kubectl rollout history deployment/nginx-deployment
+```
+
+Deployment revision 이력을 확인한다.
+
+```bash
 kubectl delete -f k8s/practice-order/04-deployment/nginx.yml
 ```
+
+Deployment가 생성한 리소스를 삭제한다.
 
 ## 05. Service
 
@@ -216,27 +295,96 @@ ConfigMap, Secret, PVC를 MariaDB에 조합한다.
 
 ```bash
 kubectl apply -f k8s/practice-order/08-storage/nfs-pod.yml
+```
+
+NFS 서버 Pod를 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/08-storage/nfs-service.yml
+```
+
+NFS 서버 Service를 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/08-storage/nfs-storageclass.yml
+```
+
+NFS용 StorageClass를 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/08-storage/nfs-pvc.yml
+```
+
+동적 볼륨을 요청하는 PVC를 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/07-secret/secret.yml
+```
+
+MariaDB 인증정보 Secret을 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/06-configmap/configmap.yml
+```
+
+MariaDB 초기화 SQL ConfigMap을 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/05-service/service.yml
+```
+
+MariaDB용 Service를 생성한다.
+
+```bash
 kubectl apply -f k8s/practice-order/09-statefulset/statefulset.yml
+```
+
+MariaDB StatefulSet을 생성한다.
+
+```bash
 kubectl rollout status statefulset/mariadb
+```
+
+StatefulSet의 Pod가 준비될 때까지 기다린다.
+
+```bash
 kubectl get statefulset,pod,pvc,service
 ```
+
+StatefulSet, Pod, PVC, Service 상태를 확인한다.
 
 실습 종료 시 StatefulSet과 연결 리소스를 삭제한다. PVC는 데이터 보존을 위해
 별도로 삭제한다.
 
 ```bash
 kubectl delete -f k8s/practice-order/09-statefulset/statefulset.yml
+```
+
+MariaDB StatefulSet을 삭제한다.
+
+```bash
 kubectl delete -f k8s/practice-order/05-service/service.yml
+```
+
+MariaDB Service를 삭제한다.
+
+```bash
 kubectl delete -f k8s/practice-order/06-configmap/configmap.yml
+```
+
+MariaDB 초기화 SQL ConfigMap을 삭제한다.
+
+```bash
 kubectl delete -f k8s/practice-order/07-secret/secret.yml
+```
+
+MariaDB 인증정보 Secret을 삭제한다.
+
+```bash
 kubectl delete pvc mariadb-data-mariadb-0
 ```
+
+남은 MariaDB PVC를 삭제한다. 이 명령은 저장된 실습 데이터를 제거한다.
 
 ## 10. 3-Tier Application
 
@@ -273,7 +421,8 @@ ClusterRole을 학습한다.
 
 ## 16. DaemonSet
 
-[16-daemonset](./16-daemonset/)에서 노드별 Pod 실행을 학습한다.
+[16-daemonset](./16-daemonset/)에서 Node Exporter를 DaemonSet으로 배포해 노드별
+메트릭을 제공하고, Prometheus로 수집한 메트릭을 Grafana에서 시각화한다.
 
 ## 17. Cluster-scoped Resource
 

@@ -17,6 +17,18 @@ KUBE_CONFIG
 
 ```bash
 kubectl rollout status deployment/frontend
+```
+
+Frontend Deployment의 새 버전 배포가 완료될 때까지 기다린다.
+
+```bash
 kubectl rollout status deployment/fastcgi-backend
+```
+
+Backend Deployment의 새 버전 배포가 완료될 때까지 기다린다.
+
+```bash
 kubectl get pods
 ```
+
+CD 배포 후 전체 Pod 상태를 확인한다.

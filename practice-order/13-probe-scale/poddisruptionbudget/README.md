@@ -9,6 +9,18 @@
 
 ```bash
 kubectl apply -f backend-pdb.yml
+```
+
+Backend의 자발적 중단을 보호하는 PodDisruptionBudget을 생성한다.
+
+```bash
 kubectl get pdb fastcgi-backend-pdb
+```
+
+PDB의 최소 가용 Pod 수와 현재 허용 중단 수를 요약해 확인한다.
+
+```bash
 kubectl describe pdb fastcgi-backend-pdb
 ```
+
+PDB selector, 조건, 이벤트를 상세 확인한다.

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1500" height="920" viewBox="0 0 1500 920" role="img" aria-labelledby="title desc">
   <title id="title">초기 이미지 기반 3-Tier 실습 구조</title>
-  <desc id="desc">3-Tier 실습의 Frontend, Backend, 테스트용 MariaDB Deployment와 ClusterIP Service 연결을 보여준다. 영속 저장소는 09단계 StatefulSet을 선택할 때 추가한다.</desc>
+  <desc id="desc">3-Tier 실습의 Frontend와 Backend Deployment가 MariaDB StatefulSet과 Headless Service, nfs-csi PVC에 연결되는 구조</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#475569"/>
@@ -46,9 +46,9 @@
 
   <rect x="1080" y="195" width="330" height="200" rx="16" class="database"/>
   <text x="1110" y="238" class="heading">Database</text>
-  <text x="1110" y="276" class="body">Deployment: mariadb</text>
+  <text x="1110" y="276" class="body">StatefulSet: mariadb</text>
   <text x="1110" y="310" class="small">image: mariadb:11</text>
-  <text x="1110" y="340" class="small">Storage: emptyDir (test)</text>
+  <text x="1110" y="340" class="small">Storage: nfs-csi PVC</text>
   <text x="1110" y="370" class="small">Service: mariadb:3306</text>
 
   <path d="M420 295 H585" class="flow"/>
@@ -75,23 +75,23 @@
   <path d="M540 575 V450" class="dashed"/>
 
   <rect x="790" y="500" width="660" height="300" rx="20" class="storage"/>
-  <text x="820" y="540" class="heading">저장소 선택</text>
+  <text x="820" y="540" class="heading">MariaDB 저장소</text>
 
   <rect x="830" y="575" width="260" height="155" rx="14" class="storage"/>
-  <text x="858" y="615" class="heading">기본 테스트</text>
-  <text x="858" y="652" class="small">emptyDir</text>
-  <text x="858" y="682" class="small">Pod 재생성 시 초기화</text>
-  <text x="858" y="712" class="small">database.yml에서 사용</text>
+  <text x="858" y="615" class="heading">PVC</text>
+  <text x="858" y="652" class="small">mariadb-data</text>
+  <text x="858" y="682" class="small">mariadb-data-mariadb-0</text>
+  <text x="858" y="712" class="small">StatefulSet이 자동 생성</text>
 
   <rect x="1150" y="575" width="260" height="155" rx="14" class="storage"/>
-  <text x="1178" y="615" class="heading">영속 저장소 선택</text>
-  <text x="1178" y="652" class="small">09 StatefulSet</text>
-  <text x="1178" y="682" class="small">PVC · StorageClass</text>
-  <text x="1178" y="712" class="small">NFS CSI 연결</text>
+  <text x="1178" y="615" class="heading">NFS CSI</text>
+  <text x="1178" y="652" class="small">StorageClass: nfs-csi</text>
+  <text x="1178" y="682" class="small">09번 저장소 실습 재사용</text>
+  <text x="1178" y="712" class="small">NFS Server 필요</text>
 
   <path d="M1110 652 H1090" class="flow"/>
-  <text x="1085" y="632" text-anchor="end" class="small">선택 구성</text>
+  <text x="1085" y="632" text-anchor="end" class="small">PVC 프로비저닝</text>
 
   <text x="60" y="870" class="heading">실습 검증</text>
-  <text x="60" y="900" class="body">kubectl get deployment,pod,service · 내부 DNS: frontend, fastcgi-backend, mariadb</text>
+  <text x="60" y="900" class="body">kubectl get deployment,statefulset,pod,service,pvc · 내부 DNS: frontend, fastcgi-backend, mariadb</text>
 </svg>

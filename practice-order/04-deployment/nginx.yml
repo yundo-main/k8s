@@ -6,11 +6,6 @@ metadata:
     app: nginx-deployment
 spec:
   replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 1
   selector:
     matchLabels:
       app: nginx-deployment

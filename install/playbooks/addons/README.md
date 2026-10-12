@@ -27,10 +27,27 @@ Calico는 기본 설치 순서에서도 `addons/cni-calico.yml`로 설치한다.
 
 ```bash
 ansible-playbook -i ../inventory/hosts.yml cni-calico.yml
+```
+
+Calico CNI를 개별 설치한다.
+
+```bash
 ansible-playbook -i ../inventory/hosts.yml addons/metrics-server.yml
+```
+
+Metrics Server를 개별 설치한다.
+
+```bash
 ansible-playbook -i ../inventory/hosts.yml addons/ingress-nginx.yml
+```
+
+NGINX Ingress Controller를 개별 설치한다.
+
+```bash
 ansible-playbook -i ../inventory/hosts.yml addons/nfs-csi.yml
 ```
+
+NFS CSI Driver를 개별 설치한다.
 
 Calico 개별 설치 명령은 `install/playbooks` 디렉터리에서 다음처럼 실행해도
 된다.

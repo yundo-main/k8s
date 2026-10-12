@@ -36,16 +36,35 @@ spec:
 
 ```bash
 kubectl apply -f nginx.yml
+```
+
+nginx ReplicaSet을 생성하고 3개의 Pod를 유지하도록 한다.
+
+```bash
 kubectl get rs nginx-replicaset
+```
+
+ReplicaSet의 desired/current/ready replica 수를 확인한다.
+
+```bash
 kubectl get pods -l app=nginx-replicaset -o wide
 ```
+
+ReplicaSet이 관리하는 Pod의 상태와 배치 노드를 확인한다.
 
 복제본 수 변경:
 
 ```bash
 kubectl scale rs nginx-replicaset --replicas=5
+```
+
+ReplicaSet이 유지할 Pod 수를 5개로 변경한다.
+
+```bash
 kubectl get pods -l app=nginx-replicaset
 ```
+
+스케일링 결과로 Pod가 5개 실행 중인지 확인한다.
 
 실습 종료:
 

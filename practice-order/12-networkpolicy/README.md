@@ -42,18 +42,47 @@ Operational Backend → 외부 HTTPS:443 및 kube-dns:53
 
 ```bash
 kubectl apply -f 3tier-networkpolicy.yml
+```
+
+3-Tier Pod 간 허용 ingress·egress 규칙을 적용한다.
+
+```bash
 kubectl get networkpolicy
+```
+
+현재 Namespace에 생성된 NetworkPolicy 목록을 확인한다.
+
+```bash
 kubectl describe networkpolicy 3tier-default-deny
 ```
+
+정책 대상 Pod와 허용 포트·Namespace·selector를 상세 확인한다.
 
 정책 적용 후에도 외부 접근이 되는지 확인한다.
 
 ```bash
 curl http://10.10.10.150:30198/
+```
+
+NetworkPolicy 적용 후 Ingress 경로를 통한 외부 Frontend 접근을 확인한다.
+
+```bash
 kubectl get pods -l app=frontend
+```
+
+정책 대상 Frontend Pod의 상태를 확인한다.
+
+```bash
 kubectl get pods -l app=fastcgi-backend
+```
+
+정책 대상 Backend Pod의 상태를 확인한다.
+
+```bash
 kubectl get pods -l app=mariadb
 ```
+
+정책 대상 MariaDB Pod의 상태를 확인한다.
 
 정책이 적용된 뒤 예상한 통신이 제한되면 다음 항목을 확인한다.
 
@@ -64,9 +93,21 @@ kubectl get pods -l app=mariadb
 
 ```bash
 kubectl get namespace ingress-nginx kube-system --show-labels
+```
+
+Ingress Controller와 kube-system Namespace의 라벨을 확인한다.
+
+```bash
 kubectl -n kube-system get pods -l k8s-app=kube-dns
+```
+
+CoreDNS Pod의 selector 라벨과 실행 상태를 확인한다.
+
+```bash
 kubectl -n calico-system get pods
 ```
+
+Calico 구성 Pod가 정상 실행 중인지 확인한다.
 
 ## 삭제
 

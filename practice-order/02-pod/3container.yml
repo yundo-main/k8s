@@ -4,6 +4,9 @@ kind: Pod
 metadata:
   name: nginx-fastapi-pod
 spec:
+  # nginx, FastAPI, MariaDB 이미지를 다운로드할 때 사용할 인증 Secret이다.
+  imagePullSecrets:
+    - name: jarrod-secret-test
   hostAliases:
     - ip: 127.0.0.1
       hostnames:

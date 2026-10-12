@@ -40,9 +40,21 @@ Frontend는 HTML 파일을 `/usr/share/nginx/html`에 마운트하고, Backend�
 
 ```bash
 kubectl apply -f frontend.yml
+```
+
+Frontend HTML ConfigMap을 생성한다.
+
+```bash
 kubectl apply -f backend.yml
+```
+
+Backend 애플리케이션 코드 ConfigMap을 생성한다.
+
+```bash
 kubectl get configmap frontend-html backend-app
 ```
+
+두 ConfigMap이 생성되었는지 확인한다.
 
 Backend 예제의 DB 접속 정보는 학습용 코드에 포함된 값이다. 운영 환경에서는
 비밀번호를 코드나 ConfigMap에 넣지 말고 Secret과 환경 변수로 분리한다.
@@ -76,9 +88,21 @@ data:
 
 ```bash
 kubectl apply -f configmap.yml
+```
+
+MariaDB 초기화 SQL ConfigMap을 생성한다.
+
+```bash
 kubectl get configmap mariadb-initdb
+```
+
+ConfigMap이 존재하는지 확인한다.
+
+```bash
 kubectl describe configmap mariadb-initdb
 ```
+
+저장된 `init.sql` 키와 내용을 상세 확인한다.
 
 다음 StatefulSet 단계에서는 이 ConfigMap을
 `/docker-entrypoint-initdb.d/init.sql`로 마운트한다. ConfigMap은 일반 설정과
