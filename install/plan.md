@@ -42,6 +42,9 @@ Ansible은 관리 호스트에서 SSH로 각 노드에 접속해 반복 작업�
 | 관리 호스트 또는 Bastion | Ansible, SSH 개인 키, 대상 노드 접속 정보 |
 | 각 Kubernetes 노드 | SSH 서버, Python 3, sudo 권한 |
 
+SSH 키 생성, 공개키 등록, 키 기반 접속 검증은
+[SSH 키 준비와 노드 등록](./ssh/README.md) 절차를 먼저 수행합니다.
+
 각 Kubernetes 노드에 Ansible을 별도로 설치할 필요는 없습니다. 관리 호스트의
 Ansible이 SSH로 노드에 접속해 모듈을 실행합니다. 다만 노드에 Python이 없거나
 아주 초기 상태라면 `raw` 모듈로 Python을 먼저 설치하는 bootstrap 작업이
@@ -67,6 +70,8 @@ Windows의 WSL2는 편리한 개발·테스트 방법이지만, 운영 자동화
 ```text
 k8s/install/
 ├── plan.md
+├── ssh/
+│   └── README.md
 ├── inventory/
 │   └── hosts.yml
 ├── playbooks/

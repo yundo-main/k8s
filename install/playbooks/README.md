@@ -49,6 +49,9 @@ Python·swap·hostname·sudo 상태를 점검하는 Playbook이다. 명령은 �
 않으면 `K8S_SSH_USER`는 `groom`, `K8S_SSH_KEY`는 현재 사용자의
 `$HOME/.ssh/k8s_ed25519`를 사용한다.
 
+키 생성과 각 노드의 공개키 등록은 [SSH 키 준비와 노드 등록](../ssh/README.md)을
+먼저 완료한다.
+
 ```bash
 export K8S_SSH_USER="${K8S_SSH_USER:-groom}"
 export K8S_SSH_KEY="${K8S_SSH_KEY:-$HOME/.ssh/k8s_ed25519}"
