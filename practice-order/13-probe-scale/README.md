@@ -4,7 +4,7 @@
 
 HPA가 사용할 Metrics Server는 운영 영역에서 먼저 설치·확인한다.
 
-- [Metrics Server 운영 자료](../../operations/addons/autoscaling/README.md)
+- [Metrics Server 운영 자료](../../operations/07-addons/autoscaling/README.md)
 
 Metrics Server가 준비되지 않으면 Probe 실습은 진행할 수 있지만 HPA 적용은
 보류한다. 설치와 장애 확인은 이 실습 문서가 아니라 운영 자료에서 수행한다.

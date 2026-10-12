@@ -98,7 +98,7 @@ kubectl get events -A --sort-by=.lastTimestamp
 `exec format error`가 발생할 수 있다.
 
 ```bash
-bash ../operations/cluster/check-architecture.sh
+bash ../operations/01-cluster/check-architecture.sh
 ```
 
 이 점검 결과는 기록용이며 클러스터 리소스를 변경하지 않는다. 현재 점검
@@ -439,7 +439,7 @@ LimitRange 등을 학습한다.
 
 - [Operations 이론](../operations/operations-theory.md)
 - [Addon 설치 순서](../install/addons/README.md)
-- [운영 Addon 자료](../operations/addons/README.md): CNI, Ingress, Storage, Operator
+- [운영 Addon 자료](../operations/07-addons/README.md): CNI, Ingress, Storage, Operator
 - [Operations](../operations/README.md): 클러스터·노드·네트워크·장애 대응
 
 ## Chapter 3. DevOps와 CI/CD

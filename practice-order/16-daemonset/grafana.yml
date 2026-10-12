@@ -64,7 +64,7 @@ spec:
           configMap:
             name: grafana-datasources
         - name: data
-          # 로컬 시각화 실습용 임시 저장소다. Pod 재생성 시 초기화된다.
+          # 원격 관리 서버 내부 시각화 실습용 임시 저장소다. Pod 재생성 시 초기화된다.
           emptyDir: {}
 ---
 apiVersion: v1

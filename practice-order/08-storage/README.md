@@ -3,7 +3,7 @@
 Stateful 애플리케이션의 데이터를 Pod 생명주기와 분리한다.
 
 > 사전 확인: 이 실습은 NFS Server Pod 이미지를 사용하므로 먼저
-> [클러스터 이미지 아키텍처 점검](../../operations/cluster/README.md#이미지-아키텍처-사전-점검)을
+> [클러스터 이미지 아키텍처 점검](../../operations/01-cluster/README.md#이미지-아키텍처-사전-점검)을
 > 실행한다. `andrewkidd/nfs-server:v2.2.7`은 ARM64·AMD64를 지원하지만,
 > 노드 커널의 `nfs`·`nfsd` 모듈이 필요하다.
 

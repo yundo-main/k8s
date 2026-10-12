@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
   <title id="title">Ingress Controller 설치와 3-Tier 외부 라우팅</title>
-  <desc id="desc">Ingress Controller 설치 후 세 노드의 NodePort로 들어온 외부 요청이 IngressClass와 fastcgi-ingress 규칙을 거쳐 Frontend 또는 Backend Service로 전달되는 흐름을 보여준다.</desc>
+  <desc id="desc">Ingress Controller 설치 후 세 노드의 NodePort로 들어온 외부 요청이 IngressClass와 fastapi-ingress 규칙을 거쳐 Frontend 또는 Backend Service로 전달되는 흐름을 보여준다.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#475569"/>
@@ -22,7 +22,7 @@
 
   <rect width="1400" height="820" fill="#f8fafc"/>
   <text x="60" y="55" class="title">Ingress Controller 설치 → 3-Tier 외부 라우팅</text>
-  <text x="60" y="86" class="body">설치: install/playbooks/addons/ingress-nginx.yml · 운영: operations/addons/ingress</text>
+  <text x="60" y="86" class="body">설치: install/playbooks/addons/ingress-nginx.yml · 운영: operations/07-addons/ingress</text>
 
   <rect x="60" y="135" width="270" height="210" rx="16" class="external"/>
   <text x="92" y="180" class="heading">외부 클라이언트</text>
@@ -42,7 +42,7 @@
 
   <rect x="930" y="135" width="400" height="210" rx="16" class="rule"/>
   <text x="965" y="180" class="heading">IngressClass + Ingress</text>
-  <text x="965" y="225" class="body">nginx · fastcgi-ingress</text>
+  <text x="965" y="225" class="body">nginx · fastapi-ingress</text>
   <text x="965" y="265" class="small">/       → frontend:80</text>
   <text x="965" y="300" class="small">/api/ → fastcgi-backend:8000</text>
   <text x="965" y="330" class="small">Service 이름과 포트로 전달</text>

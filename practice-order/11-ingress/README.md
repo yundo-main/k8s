@@ -9,7 +9,7 @@
 
 Controller가 설치되어 있지 않다면 먼저
 [`install/playbooks/addons/ingress-nginx.yml`](../../install/playbooks/addons/ingress-nginx.yml)을
-실행하고 [`operations/addons/ingress`](../../operations/addons/ingress/README.md)에서
+실행하고 [`operations/07-addons/ingress`](../../operations/07-addons/ingress/README.md)에서
 운영 상태를 확인한다.
 절차를 실행한다. Ingress YAML만 적용해서는 외부 요청을 받을 수 없다.
 
@@ -169,13 +169,13 @@ kubectl apply -f practice-order/11-ingress/ingress.yml
 `/`와 `/api/` 경로를 Service로 전달하는 Ingress 리소스를 생성한다.
 
 ```bash
-kubectl get ingress fastcgi-ingress
+kubectl get ingress fastapi-ingress
 ```
 
 Ingress의 주소와 생성 상태를 요약해 확인한다.
 
 ```bash
-kubectl describe ingress fastcgi-ingress
+kubectl describe ingress fastapi-ingress
 ```
 
 Ingress 규칙, Backend Service, 이벤트를 상세 확인한다.
@@ -221,7 +221,7 @@ Ingress 라우팅 실패가 아니며, 다음 경로로 Frontend를 확인한다
 `404` 또는 `503`이 나오면 다음 순서로 확인한다.
 
 ```bash
-kubectl get ingress fastcgi-ingress
+kubectl get ingress fastapi-ingress
 ```
 
 Ingress 리소스가 정상 생성되었는지 확인한다.

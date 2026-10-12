@@ -31,7 +31,7 @@ kubectl get --raw='/readyz?verbose'
 Kubernetes API Server의 세부 준비 상태를 확인한다.
 
 ```bash
-bash operations/cluster/check-architecture.sh
+bash operations/01-cluster/check-architecture.sh
 ```
 
 실행 환경의 CPU 아키텍처와 이미지 호환성을 점검한다.
@@ -44,11 +44,11 @@ bash operations/cluster/check-architecture.sh
 
 | 순서 | Addon | 필요한 실습 | 설치·검증 문서 |
 | --- | --- | --- | --- |
-| 1 | CNI·Calico | 01~18 전체 | `playbooks/addons/cni-calico.yml` · [운영 자료](../../operations/addons/cni/README.md) |
-| 2 | NFS CSI (`csi-nfs` Namespace) | 08 Storage, 09 StatefulSet, 15 Backup | `playbooks/addons/nfs-csi.yml` · [운영 자료](../../operations/addons/storage/README.md) |
-| 3 | NGINX Ingress Controller | 11 Ingress, 12 NetworkPolicy | `playbooks/addons/ingress-nginx.yml` · [운영 자료](../../operations/addons/ingress/README.md) |
-| 4 | Metrics Server | 13 HPA | `playbooks/addons/metrics-server.yml` · [운영 자료](../../operations/addons/autoscaling/README.md) |
-| 5 | Operator·Controller | 선택 고급 실습 | [운영 자료](../../operations/addons/operators/README.md) |
+| 1 | CNI·Calico | 01~18 전체 | `playbooks/addons/cni-calico.yml` · [운영 자료](../../operations/07-addons/cni/README.md) |
+| 2 | NFS CSI (`csi-nfs` Namespace) | 08 Storage, 09 StatefulSet, 15 Backup | `playbooks/addons/nfs-csi.yml` · [운영 자료](../../operations/07-addons/storage/README.md) |
+| 3 | NGINX Ingress Controller | 11 Ingress, 12 NetworkPolicy | `playbooks/addons/ingress-nginx.yml` · [운영 자료](../../operations/07-addons/ingress/README.md) |
+| 4 | Metrics Server | 13 HPA | `playbooks/addons/metrics-server.yml` · [운영 자료](../../operations/07-addons/autoscaling/README.md) |
+| 5 | Operator·Controller | 선택 고급 실습 | [운영 자료](../../operations/07-addons/operators/README.md) |
 
 Calico는 기본 클러스터 설치 단계에서 먼저 설치할 수 있고, `addons.yml`을
 사용하는 통합 경로에서도 첫 번째로 적용한다. NFS CSI, Ingress Controller,

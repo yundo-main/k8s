@@ -103,5 +103,5 @@
   <text x="1034" y="518" class="box-text">Grafana</text>
   <text x="1034" y="545" class="small">PromQL / dashboard</text>
 
-  <text x="78" y="660" class="small">기본: Node Exporter · 내부 수집: Prometheus :9090 · 로컬 시각화: Grafana localhost:30000</text>
+  <text x="78" y="660" class="small">기본: Node Exporter · 내부 수집: Prometheus :9090 · 원격 서버 내부 확인: Grafana :30000</text>
 </svg>

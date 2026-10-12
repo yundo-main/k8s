@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Docker와 Kubernetes 핵심 개념 대응표</title>
+  <desc id="desc">Docker의 Docker Host, Runtime, Network Driver, Volume Driver, Compose, Swarm을 Kubernetes의 Node, CRI와 containerd 또는 CRI-O, CNI, CSI, Manifest와 Cluster에 같은 행으로 배치해 비교한다.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0 L11 5.5 L0 11 Z" fill="#64748b"/></marker>
+    <style>
+      .title { font: 700 34px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 18px Arial, sans-serif; fill: #475569; }
+      .heading { font: 700 25px Arial, sans-serif; fill: #0f172a; }
+      .rowtitle { font: 700 18px Arial, sans-serif; fill: #1e3a8a; }
+      .body { font: 16px Arial, sans-serif; fill: #334155; }
+      .small { font: 14px Arial, sans-serif; fill: #64748b; }
+      .docker { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .kubernetes { fill: #ecfeff; stroke: #0891b2; stroke-width: 2; }
+      .row { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; }
+      .note { fill: #fff7ed; stroke: #f97316; stroke-width: 2; }
+      .flow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="70" y="62" class="title">Docker와 Kubernetes 핵심 개념 대응표</text>
+  <text x="70" y="96" class="subtitle">비슷한 운영 목적의 개념을 같은 행에 배치한 비교 · Kubernetes는 항상 Cluster 구조</text>
+
+  <rect x="70" y="140" width="650" height="680" rx="22" class="docker"/>
+  <rect x="880" y="140" width="650" height="680" rx="22" class="kubernetes"/>
+  <text x="105" y="190" class="heading">Docker 생태계</text>
+  <text x="105" y="220" class="small">Docker Host 중심의 실행·조합·드라이버</text>
+  <text x="915" y="190" class="heading">Kubernetes 생태계</text>
+  <text x="915" y="220" class="small">Cluster 중심의 선언·인터페이스·조정</text>
+
+  <rect x="105" y="250" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="250" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="280" class="rowtitle">Docker Host</text>
+  <text x="135" y="305" class="body">Docker Engine이 실행되는 호스트</text>
+  <text x="945" y="280" class="rowtitle">Node</text>
+  <text x="945" y="305" class="body">kubelet과 컨테이너가 실행되는 호스트</text>
+  <path d="M700 284 H865" class="flow"/>
+
+  <rect x="105" y="340" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="340" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="370" class="rowtitle">Docker Engine Runtime</text>
+  <text x="135" y="395" class="body">컨테이너 실행 엔진</text>
+  <text x="945" y="370" class="rowtitle">CRI + containerd</text>
+  <text x="945" y="395" class="body">kubelet 연결·이미지·컨테이너 실행</text>
+  <path d="M700 374 H865" class="flow"/>
+
+  <rect x="105" y="430" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="430" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="460" class="rowtitle">Network Driver</text>
+  <text x="135" y="485" class="body">Docker Network 연결 방식</text>
+  <text x="945" y="460" class="rowtitle">CNI</text>
+  <text x="945" y="485" class="body">Pod 네트워크 플러그인 인터페이스</text>
+  <path d="M700 464 H865" class="flow"/>
+
+  <rect x="105" y="520" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="520" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="550" class="rowtitle">Volume Driver</text>
+  <text x="135" y="575" class="body">Docker Volume 저장소 연결</text>
+  <text x="945" y="550" class="rowtitle">CSI</text>
+  <text x="945" y="575" class="body">PV·PVC와 외부 저장소 연결</text>
+  <path d="M700 554 H865" class="flow"/>
+
+  <rect x="105" y="610" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="610" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="640" class="rowtitle">Compose</text>
+  <text x="135" y="665" class="body">YAML로 여러 컨테이너를 조합</text>
+  <text x="945" y="640" class="rowtitle">Manifest·Workload</text>
+  <text x="945" y="665" class="body">Pod·Deployment·Service를 선언</text>
+  <path d="M700 644 H865" class="flow"/>
+
+  <rect x="105" y="700" width="580" height="68" rx="12" class="row"/>
+  <rect x="915" y="700" width="580" height="68" rx="12" class="row"/>
+  <text x="135" y="730" class="rowtitle">Swarm</text>
+  <text x="135" y="755" class="body">Docker 노드 오케스트레이션</text>
+  <text x="945" y="730" class="rowtitle">Cluster</text>
+  <text x="945" y="755" class="body">항상 Cluster 구조 · 1 Node 실습도 가능</text>
+  <path d="M700 734 H865" class="flow"/>
+
+  <rect x="70" y="850" width="1460" height="38" rx="12" class="note"/>
+  <text x="800" y="876" text-anchor="middle" class="small">Docker는 한 Host에서 시작하지만, Kubernetes는 Node 1대여도 Cluster 구조로 운영된다.</text>
+</svg>

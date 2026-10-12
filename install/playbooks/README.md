@@ -362,7 +362,7 @@ Pod 간 통신을 검증한다.
 
 - [Addon 설치 순서](../addons/README.md)
 - [Addon Playbook 실행](./addons/README.md)
-- [운영 Addon 자료](../../operations/addons/README.md)
-- [클러스터 아키텍처 점검](../../operations/cluster/README.md#이미지-아키텍처-사전-점검)
+- [운영 Addon 자료](../../operations/07-addons/README.md)
+- [클러스터 아키텍처 점검](../../operations/01-cluster/README.md#이미지-아키텍처-사전-점검)
 
 Addon이 필요한 실습은 해당 Addon의 설치·확인 완료 후 시작한다.

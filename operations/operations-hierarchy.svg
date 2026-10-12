@@ -9,20 +9,20 @@
   </defs>
   <rect width="1200" height="760" fill="#fff"/>
   <text x="50" y="55" class="title">Operations 하위 디렉터리 관계</text>
-  <text x="50" y="84" class="sub">각 디렉터리는 하나의 운영 대상을 담당하고, 장애 대응은 모든 영역의 결과를 연결한다.</text>
+  <text x="50" y="84" class="sub">00-resources/에서 시작해 번호 순서로 운영 영역을 확인하고, 장애 대응은 모든 영역의 결과를 연결한다.</text>
 
   <rect x="430" y="120" width="340" height="100" rx="16" class="root"/>
   <text x="600" y="165" text-anchor="middle" class="h">operations/</text>
   <text x="600" y="193" text-anchor="middle" class="t">설치된 클러스터의 관찰·판단·조치·검증</text>
 
-  <rect x="70" y="310" width="240" height="145" rx="12" class="box"/><text x="95" y="350" class="h">cluster/</text><text x="95" y="380" class="t">API·버전·시스템 Pod</text><text x="95" y="405" class="t">클러스터 전체 상태</text><text x="95" y="435" class="n">범위: 전체 클러스터</text>
-  <rect x="340" y="310" width="240" height="145" rx="12" class="box"/><text x="365" y="350" class="h">nodes/</text><text x="365" y="380" class="t">노드 상태·자원·이벤트</text><text x="365" y="405" class="t">배치·압박·복구</text><text x="365" y="435" class="n">대상: Node·kubelet</text>
-  <rect x="610" y="310" width="240" height="145" rx="12" class="box"/><text x="635" y="350" class="h">workloads/</text><text x="635" y="380" class="t">Pod·Deployment·Job</text><text x="635" y="405" class="t">롤아웃·로그·가용성</text><text x="635" y="435" class="n">대상: 애플리케이션</text>
-  <rect x="880" y="310" width="240" height="145" rx="12" class="box"/><text x="905" y="350" class="h">network/</text><text x="905" y="380" class="t">Service·Ingress·Endpoint</text><text x="905" y="405" class="t">통신 경로·정책</text><text x="905" y="435" class="n">대상: 연결성</text>
+  <rect x="70" y="310" width="240" height="145" rx="12" class="box"/><text x="95" y="350" class="h">01-cluster/</text><text x="95" y="380" class="t">API·버전·시스템 Pod</text><text x="95" y="405" class="t">클러스터 전체 상태</text><text x="95" y="435" class="n">범위: 전체 클러스터</text>
+  <rect x="340" y="310" width="240" height="145" rx="12" class="box"/><text x="365" y="350" class="h">02-nodes/</text><text x="365" y="380" class="t">노드 상태·자원·이벤트</text><text x="365" y="405" class="t">배치·압박·복구</text><text x="365" y="435" class="n">대상: Node·kubelet</text>
+  <rect x="610" y="310" width="240" height="145" rx="12" class="box"/><text x="635" y="350" class="h">03-workloads/</text><text x="635" y="380" class="t">Pod·Deployment·Job</text><text x="635" y="405" class="t">롤아웃·로그·가용성</text><text x="635" y="435" class="n">대상: 애플리케이션</text>
+  <rect x="880" y="310" width="240" height="145" rx="12" class="box"/><text x="905" y="350" class="h">04-network/</text><text x="905" y="380" class="t">Service·Ingress·Endpoint</text><text x="905" y="405" class="t">통신 경로·정책</text><text x="905" y="435" class="n">대상: 연결성</text>
 
-  <rect x="205" y="545" width="240" height="145" rx="12" class="box"/><text x="230" y="585" class="h">storage/</text><text x="230" y="615" class="t">PV·PVC·StorageClass</text><text x="230" y="640" class="t">바인딩·마운트·복구</text><text x="230" y="670" class="n">대상: 데이터 경로</text>
-  <rect x="480" y="545" width="240" height="145" rx="12" class="addon"/><text x="505" y="585" class="h">addons/</text><text x="505" y="615" class="t">CNI·Ingress·CSI·Metrics</text><text x="505" y="640" class="t">확장 기능의 상태 확인</text><text x="505" y="670" class="n">설치: install/에서 수행</text>
-  <rect x="755" y="545" width="240" height="145" rx="12" class="box"/><text x="780" y="585" class="h">troubleshooting/</text><text x="780" y="615" class="t">이벤트·describe·logs</text><text x="780" y="640" class="t">원인 분석·복구 검증</text><text x="780" y="670" class="n">입력: 모든 운영 영역</text>
+  <rect x="205" y="545" width="240" height="145" rx="12" class="box"/><text x="230" y="585" class="h">05-storage/</text><text x="230" y="615" class="t">PV·PVC·StorageClass</text><text x="230" y="640" class="t">바인딩·마운트·복구</text><text x="230" y="670" class="n">대상: 데이터 경로</text>
+  <rect x="480" y="545" width="240" height="145" rx="12" class="addon"/><text x="505" y="585" class="h">07-addons/</text><text x="505" y="615" class="t">CNI·Ingress·CSI·Metrics</text><text x="505" y="640" class="t">확장 기능의 상태 확인</text><text x="505" y="670" class="n">설치: install/에서 수행</text>
+  <rect x="755" y="545" width="240" height="145" rx="12" class="box"/><text x="780" y="585" class="h">06-troubleshooting/</text><text x="780" y="615" class="t">이벤트·describe·logs</text><text x="780" y="640" class="t">원인 분석·복구 검증</text><text x="780" y="670" class="n">입력: 모든 운영 영역</text>
 
   <path d="M480 220L190 305" class="edge"/><path d="M540 220L460 305" class="edge"/><path d="M660 220L730 305" class="edge"/><path d="M720 220L1000 305" class="edge"/>
   <path d="M520 220L325 540" class="edge"/><path d="M600 220V540" class="edge"/><path d="M680 220L875 540" class="edge"/>
