@@ -26,7 +26,7 @@ spec:
             - /bin/sh
             - -c
           args:
-            - >-
+            - |
               # 학습용 구성이라 시작 시 패키지를 설치한다. 운영에서는 이미지에 포함한다.
               pip install --no-cache-dir fastapi uvicorn pymysql python-multipart
               && uvicorn main:app --host 0.0.0.0 --port 8000
