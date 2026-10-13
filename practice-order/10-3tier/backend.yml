@@ -25,11 +25,11 @@ spec:
             # 셸에서 의존성 설치 후 ConfigMap의 main.py를 실행한다.
             - /bin/sh
             - -c
+          # 학습용 구성이라 시작 시 패키지를 설치한다. 운영에서는 이미지에 포함한다.
           args:
-            - |
-              # 학습용 구성이라 시작 시 패키지를 설치한다. 운영에서는 이미지에 포함한다.
-              pip install --no-cache-dir fastapi uvicorn pymysql python-multipart
-              && uvicorn main:app --host 0.0.0.0 --port 8000
+            - >-
+              pip install --no-cache-dir fastapi uvicorn pymysql python-multipart &&
+              uvicorn main:app --host 0.0.0.0 --port 8000
           env:
             # 애플리케이션 모듈 이름과 MariaDB 접속 대상을 지정한다.
             - name: MODULE_NAME
