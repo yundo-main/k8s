@@ -8,15 +8,25 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Validate YAML syntax
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install kubeconform
         run: |
-          ruby -e 'require "yaml"; Dir["k8s/**/*.yml", "k8s/**/*.yaml"].each { |f| YAML.load_stream(File.read(f)); puts "YAML OK: #{f}" }'
+          mkdir -p "$RUNNER_TEMP/bin"
+          GOBIN="$RUNNER_TEMP/bin" go install github.com/yannh/kubeconform/cmd/kubeconform@v0.6.7
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
       - name: Validate Kubernetes manifests
         run: |
-          kubectl apply --dry-run=client -f practice-order/10-3tier/frontend.yml
-          kubectl apply --dry-run=client -f practice-order/10-3tier/backend.yml
-          kubectl apply --dry-run=client -f practice-order/11-ingress/ingress.yml
-      - name: Run practice test
-        run: bash practice-order/21-application-test/check-manifests.sh
+          kubeconform -strict -verbose -output pretty -summary \
+            ci-practice/10-3tier/frontend.yml \
+            ci-practice/10-3tier/backend.yml \
+            ci-practice/11-ingress/ingress.yml

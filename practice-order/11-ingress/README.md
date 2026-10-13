@@ -252,19 +252,13 @@ Controller가 기록한 라우팅 오류와 Backend 연결 오류를 확인한�
 
 ## 삭제
 
-스크립트는 이 실습의 `fastapi-ingress` 리소스만 삭제한다. Ingress Controller,
-`IngressClass/nginx`, `ingress-nginx-controller` NodePort Service는 유지한다.
-
-```bash
-bash practice-order/11-ingress/delete-ingress.sh
-```
-
-저장소 루트에서 삭제 스크립트를 실행한다. 현재 터미널의 `KUBECONFIG` 설정을
-그대로 사용한다.
-
 ```bash
 kubectl delete -f practice-order/11-ingress/ingress.yml
 ```
+
+저장소 루트에서 실행하며, 이 실습의 `fastapi-ingress` 리소스만 삭제한다.
+Ingress Controller, `IngressClass/nginx`, `ingress-nginx-controller` NodePort
+Service는 유지한다.
 
 스크립트를 사용하지 않을 때 실행하는 동일한 삭제 명령이다.
 

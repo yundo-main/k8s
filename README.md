@@ -59,3 +59,10 @@ examples/       실습 파일을 만들기 위한 내부 기반 예제
 ```
 
 Secret과 kubeconfig는 저장소에 커밋하지 않는다.
+
+
+## git
+git remote set-url origin https://github.com/yundo-main/k8s.git
+git remote -v                                                  
+origin	https://github.com/yundo-main/k8s.git (fetch)
+origin	https://github.com/yundo-main/k8s.git (push)

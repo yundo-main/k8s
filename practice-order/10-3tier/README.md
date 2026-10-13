@@ -202,8 +202,8 @@ kubectl delete pvc mariadb-data-mariadb-0
 
 ## 원본 예제와의 관계
 
-[`k8s/examples/frontend.yml`](../../examples/frontend.yml)과
-[`k8s/examples/backend.yml`](../../examples/backend.yml)의 Deployment·Service
+[`k8s/examples/1/frontend.yml`](../../examples/1/frontend.yml)과
+[`k8s/examples/1/backend.yml`](../../examples/1/backend.yml)의 Deployment·Service
 구조를 기준으로 한다. Backend와 Frontend는 각각의 실습 manifest에 Deployment,
 ConfigMap, Service를 모두 포함한다. 외부 경로 라우팅은
 [`11-ingress`](../11-ingress/README.md)에서 관리한다.

@@ -106,8 +106,8 @@ crictl info
 Node에서 실행하면 CRI endpoint가 응답하는지와 런타임 정보를 확인한다. 이 명령은
 관리 Mac이 아니라 해당 Kubernetes Node에서 실행해야 한다.
 
-설치 파일은 [containerd Playbook](../../../install/playbooks/containerd.yml)과
-[설치 실행 순서](../../../install/playbooks/README.md#04-containerd-설치)에서 확인한다.
+설치 파일은 [containerd Playbook](../../install/playbooks/containerd.yml)과
+[설치 실행 순서](../../install/playbooks/README.md#04-containerd-설치)에서 확인한다.
 
 공식 참고: [Kubernetes Container Runtimes](https://kubernetes.io/docs/setup/production-environment/container-runtimes/),
 [CRI](https://kubernetes.io/docs/concepts/containers/cri/),

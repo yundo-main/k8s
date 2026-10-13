@@ -54,11 +54,11 @@
   ↓
 18 Extension
   ↓
-19 CI 검증
+19 CI 검증 (ci-test 저장소)
   ↓
-20 CD 배포
+20 CD 배포 (ci-test 저장소)
   ↓
-21~26 DevOps 확장
+21~26 DevOps 확장 (ci-test 저장소)
   ↓
 27~32 DevSecOps
   ↓
@@ -128,6 +128,17 @@ DaemonSet을 사용한다.
 별도로 진행한다.
 
 Chapter 1은 01~10단계, Chapter 2는 11~18단계로 구성한다.
+
+## 19번부터 별도 저장소 사용
+
+01~18번은 기존 Kubernetes 학습 저장소에서 진행하고, 19번부터 32번까지의
+CI·CD·DevOps·DevSecOps 실습은 `/Users/jarrod/project/code-test-check/k8s-EKS`라는
+별도 EKS 작업 디렉터리와 GitHub 저장소를 사용한다. 기존 `practice-order` 전체를
+`ci-practice`라는 이름으로 복사하며, 기존 `k8s` 저장소는 수정하거나 삭제하지
+않는다.
+
+19번 CI부터는 [EKS 실습 저장소 절차](./19-ci/README.md#eks-실습-저장소로-시작하기)를 먼저 수행한다. 이후 필요한 workflow와 검사 파일은
+`k8s-EKS` 저장소 안에서 직접 구성한다.
 
 ## 01. Docker Hub 이미지 Pull Secret
 
@@ -455,4 +466,4 @@ Rollout 확인을 자동화한다.
   위한 내부 기반 예제다.
 - 테스트용 `latest` 태그는 이미지 변경으로 결과가 달라질 수 있다.
 - Secret 값과 kubeconfig는 저장소에 커밋하지 않는다.
-- 기존 `k8s/examples/db.yml`과 StatefulSet MariaDB 예제를 동시에 적용하지 않는다.
+- 기존 `k8s/examples/1/db.yml`과 StatefulSet MariaDB 예제를 동시에 적용하지 않는다.

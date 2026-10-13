@@ -205,5 +205,5 @@ StatefulSet 삭제 후에도 남아 있는 PVC를 확인한다.
 kubectl delete pvc mariadb-data-mariadb-0
 ```
 
-> `k8s/examples/db.yml`의 Deployment 방식과 동시에 적용하지 않는다. 두 구성은
+> `k8s/examples/1/db.yml`의 Deployment 방식과 동시에 적용하지 않는다. 두 구성은
 > 같은 `mariadb` 리소스 이름을 사용한다.

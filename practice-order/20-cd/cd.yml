@@ -23,7 +23,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
-          context: practice-order/22-image-build/backend
+          context: ci-practice/22-image-build/backend
           push: true
           tags: ${{ env.IMAGE }}:${{ env.IMAGE_TAG }}
       - name: Configure kubectl
@@ -34,4 +34,4 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > "$RUNNER_TEMP/kube/config"
           echo "KUBECONFIG=$RUNNER_TEMP/kube/config" >> "$GITHUB_ENV"
       - name: Deploy
-        run: bash practice-order/24-rollout/deploy.sh "${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"
+        run: bash ci-practice/24-rollout/deploy.sh "${{ env.IMAGE }}:${{ env.IMAGE_TAG }}"

@@ -10,13 +10,13 @@ MariaDB 초기화 SQL 예제:
 
 ## `examples`에서 실습 파일을 만드는 과정
 
-`k8s/examples/db.yml`은 ConfigMap, PVC, Deployment, Service를 한 번에 적용하는
+`k8s/examples/1/db.yml`은 ConfigMap, PVC, Deployment, Service를 한 번에 적용하는
 통합 예제다. 학습 단계에서는 그중 ConfigMap 부분만 분리해
 `practice-order/06-configmap/configmap.yml`로 만든다.
 
 ### 1. 기준 예제에서 ConfigMap 찾기
 
-[`k8s/examples/db.yml`](../../examples/db.yml)의 첫 번째 문서에서 다음 항목을
+[`k8s/examples/1/db.yml`](../../examples/1/db.yml)의 첫 번째 문서에서 다음 항목을
 확인한다.
 
 - `kind: ConfigMap`
@@ -27,9 +27,9 @@ PVC, Deployment, Service 문서는 다음 실습 단계의 범위이므로 함�
 
 같은 방법으로 다음 ConfigMap도 분리한다.
 
-- `k8s/examples/frontend.yml`의 `frontend-html` ConfigMap만
+- `k8s/examples/1/frontend.yml`의 `frontend-html` ConfigMap만
   [`frontend.yml`](./frontend.yml)에 복사한다.
-- `k8s/examples/backend.yml`의 `backend-app` ConfigMap만
+- `k8s/examples/1/backend.yml`의 `backend-app` ConfigMap만
   [`backend.yml`](./backend.yml)에 복사한다.
 - 각 원본 Deployment의 `volumes.configMap.name`과 실습 ConfigMap 이름이
   일치하는지 확인한다.
