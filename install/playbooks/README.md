@@ -43,6 +43,22 @@ ansible-playbook
 - `variable`: 버전, 주소, 경로처럼 환경에 따라 달라지는 값을 분리한다.
 - `handler`: 설정 변경 후에만 서비스 재시작처럼 후속 작업을 실행한다.
 
+## Playbook별 용도
+
+| 파일 | 대상 | 용도 |
+| --- | --- | --- |
+| `preflight.yml` | 모든 노드 | Python, swap, hostname, sudo, 시간 동기화 등 사전 상태 점검 |
+| `bootstrap.yml` | 모든 노드 | swap 비활성화, 커널 모듈, Kubernetes 네트워크 sysctl 설정 |
+| `containerd.yml` | 모든 노드 | containerd 설치, CRI 설정, systemd cgroup 적용 |
+| `kubernetes-packages.yml` | 모든 노드 | `kubeadm`, `kubelet`, `kubectl` 저장소·패키지 설치 및 버전 고정 |
+| `control-plane.yml` | Control Plane | `kubeadm init`, kubeconfig 구성, kubelet 설정 및 Control Plane 초기화 |
+| `workers.yml` | Control Plane·Worker | Worker join 명령 생성·실행 및 전체 Node 등록 확인 |
+| `addons/all.yml` | 관리 호스트 | 선택 구성요소 Playbook을 정해진 순서로 호출 |
+
+각 Playbook은 담당 범위만 수행한다. Addon의 실제 `kubectl` manifest 처리는
+[`playbooks/addons/`](./addons/README.md)의 개별 Playbook과
+[`install/addons/`](../addons/README.md)의 설치 스크립트가 담당한다.
+
 예를 들어 `preflight.yml`은 `inventory/hosts.yml`의 모든 노드를 대상으로
 Python·swap·hostname·sudo 상태를 점검하는 Playbook이다. 명령은 관리 호스트에서
 실행되지만 작업은 대상 노드에 적용된다.
