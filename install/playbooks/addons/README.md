@@ -13,6 +13,19 @@ install/playbooks/addons/
 └── nfs-csi.yml          # install/addons/storage 스크립트 호출
 ```
 
+## Addon Playbook별 용도
+
+| 파일 | 실행 대상 | 용도 |
+| --- | --- | --- |
+| `all.yml` | 관리 호스트 | Calico → Metrics Server → Ingress → NFS CSI 순서로 실행 |
+| `cni-calico.yml` | 첫 번째 Control Plane | Calico CNI manifest 적용과 DaemonSet·Node 검증 |
+| `metrics-server.yml` | 관리 호스트 | Metrics Server 설치 스크립트 호출과 rollout 확인 |
+| `ingress-nginx.yml` | 관리 호스트 | NGINX Ingress Controller 설치 스크립트 호출 |
+| `nfs-csi.yml` | 관리 호스트 | NFS CSI Driver 설치 스크립트 호출과 Controller·Node 검증 |
+
+`all.yml`은 설치 로직을 직접 포함하지 않고 개별 Playbook의 실행 순서만 조정한다.
+따라서 특정 구성요소만 설치하거나 재검증할 때는 개별 Playbook을 실행한다.
+
 ## 전체 Addon 설치
 
 `install/playbooks` 디렉터리에서 실행한다.
@@ -67,3 +80,16 @@ ansible-playbook -i inventory/hosts.yml \
 
 선택 구성요소는 기본 Kubernetes 설치와 별도의 단계다. 기본 설치 Playbook이
 성공한 뒤 `addons/all.yml` 또는 필요한 개별 Playbook만 실행한다.
+
+## 제거 스크립트
+
+Addon 제거는 Ansible Playbook이 아니라 `install/addons/`의 대응 스크립트로
+관리한다. 제거 작업은 클러스터 전체 기능에 영향을 줄 수 있으므로 필요한
+애플리케이션 실습과 의존 리소스를 먼저 정리한다.
+
+| 구성요소 | 제거 스크립트 |
+| --- | --- |
+| Calico CNI | `install/addons/cni/uninstall-calico.sh` |
+| Metrics Server | `install/addons/autoscaling/uninstall-metrics-server.sh` |
+| NGINX Ingress Controller | `install/addons/ingress/uninstall-ingress-nginx.sh` |
+| NFS CSI Driver | `install/addons/storage/uninstall-csi-nfs.sh` |

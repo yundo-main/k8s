@@ -5,6 +5,52 @@
 Ansible Playbook을 사용한다. 이 디렉터리는 실제 `kubectl`·`curl` 기반 설치 및
 제거 스크립트와 Addon별 선행조건·검증 기준을 관리한다.
 
+## 스크립트별 용도
+
+| 파일 | 용도 |
+| --- | --- |
+| `autoscaling/install-metrics-server.sh` | Metrics Server manifest 적용, 선택적 kubelet TLS 옵션 설정, rollout 확인 |
+| `autoscaling/uninstall-metrics-server.sh` | Metrics Server Deployment와 Metrics API 등록 제거 |
+| `cni/uninstall-calico.sh` | Calico CNI manifest와 Pod 네트워크 구성요소 제거 |
+| `ingress/install-ingress-nginx.sh` | NGINX Ingress Controller 설치, HTTP·HTTPS NodePort 고정, 상태 확인 |
+| `ingress/uninstall-ingress-nginx.sh` | 설치한 NGINX Ingress Controller 관련 manifest 리소스 제거 |
+| `storage/install-csi-nfs.sh` | 전용 `csi-nfs` Namespace에 NFS CSI Driver 설치 및 rollout 확인 |
+| `storage/uninstall-csi-nfs.sh` | `csi-nfs` Namespace의 NFS CSI Driver 제거 |
+
+이 스크립트는 설치 동작을 담당하고, 실행 순서·대상 호스트·Ansible 권한 처리는
+[`install/playbooks/addons/`](../playbooks/addons/README.md)에서 담당한다.
+
+## Addon 제거 명령
+
+각 Addon은 설치 스크립트와 대응하는 제거 스크립트를 제공한다.
+
+```bash
+bash install/addons/autoscaling/uninstall-metrics-server.sh
+```
+
+Metrics Server와 `metrics.k8s.io` API 등록을 제거한다. HPA가 메트릭을 받을 수
+없게 되므로 HPA 실습을 종료한 뒤 실행한다.
+
+```bash
+bash install/addons/cni/uninstall-calico.sh
+```
+
+Calico CNI를 제거한다. 클러스터 Pod 네트워크가 중단될 수 있으므로 다른 실습과
+Control Plane 운영이 종료된 경우에만 실행한다.
+
+```bash
+bash install/addons/ingress/uninstall-ingress-nginx.sh
+```
+
+NGINX Ingress Controller를 제거한다. 애플리케이션 Namespace의 Ingress 리소스는
+삭제하지 않지만 외부 라우팅은 중단된다.
+
+```bash
+bash install/addons/storage/uninstall-csi-nfs.sh
+```
+
+NFS CSI Driver를 제거한다. 연결된 PVC와 StorageClass를 먼저 확인한 뒤 실행한다.
+
 ## 1. 기본 클러스터 확인
 
 ```bash
