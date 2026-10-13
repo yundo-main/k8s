@@ -116,6 +116,28 @@ kubectl top nodes
 않는다. 현재 테스트 클러스터에는 NFS CSI Driver와 `IngressClass/nginx`가
 설치되어 있다. Metrics Server 설치 여부는 13번 실습 전에 별도로 확인한다.
 
+## 5. NGINX Ingress Controller 제거
+
+설치된 NGINX Ingress Controller 전체를 제거할 때는 설치 스크립트의 반대 스크립트를
+사용한다. `INGRESS_NGINX_VERSION`을 지정하지 않으면 설치 기본값인 `v1.15.1`을
+사용한다.
+
+```bash
+bash install/addons/ingress/uninstall-ingress-nginx.sh
+```
+
+Controller Deployment, Service, RBAC, `IngressClass/nginx`, `ingress-nginx`
+Namespace를 제거한다. 애플리케이션 Namespace의 `Ingress` 리소스는 삭제하지 않으므로
+필요하면 해당 실습의 삭제 명령을 별도로 실행한다.
+
+```bash
+INGRESS_NGINX_VERSION=v1.15.1 \
+  bash install/addons/ingress/uninstall-ingress-nginx.sh
+```
+
+설치할 때 사용한 버전과 다른 버전을 지정하면 실제 리소스와 manifest가 다를 수
+있으므로, 설치 시 사용한 버전을 동일하게 지정한다.
+
 ## 4. 실습과의 연결
 
 - 01~07: 기본 클러스터 확인 후 실행

@@ -135,3 +135,20 @@ curl -v --connect-timeout 5 http://10.10.10.150:30198/
 설치 후 흐름은 [Ingress 설치·외부 라우팅 흐름도](../../../practice-order/11-ingress/ingress-overview.svg)에서 확인한다.
 
 Ingress 오브젝트는 `practice-order/11-ingress/`에서 관리한다.
+
+## 8. Controller 제거
+
+NGINX Ingress Controller 자체를 제거할 때는 설치 스크립트의 반대 스크립트를
+사용한다. 이 작업은 모든 Namespace의 Ingress 처리를 중단하므로, 애플리케이션
+Ingress만 삭제하려는 경우에는 실습별 삭제 명령을 사용한다.
+
+```bash
+bash install/addons/ingress/uninstall-ingress-nginx.sh
+```
+
+설치 시 별도 버전을 사용했다면 같은 버전을 지정한다.
+
+```bash
+INGRESS_NGINX_VERSION=v1.15.1 \
+  bash install/addons/ingress/uninstall-ingress-nginx.sh
+```
