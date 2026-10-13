@@ -3,6 +3,10 @@
 초기 이미지와 앞 단계의 ConfigMap·Secret을 연결해 3-Tier 구조를 구성한다.
 Database는 09번 StatefulSet 구성을 적용해 `nfs-csi` PVC에 저장한다.
 
+> 이 단계만으로는 외부에서 접속할 수 있는 완성된 서비스가 아니다. Frontend·Backend·Database와
+> 내부 Service를 구성하는 단계이며, 외부 HTTP 접근과 경로 라우팅은 다음 11번
+> [Ingress 실습](../11-ingress/README.md)을 적용해야 사용할 수 있다.
+
 이 실습은 애플리케이션을 미리 포함한 통합 이미지가 아니라 기본 런타임 이미지에
 ConfigMap의 코드와 파일을 주입해 실행한다.
 
@@ -28,6 +32,20 @@ Pod는 `mariadb-0`이라는 고정 이름을 사용하고, 데이터는
 ## 실습 구조
 
 ![초기 이미지 기반 3-Tier 구조](./3tier-overview.svg)
+
+현재 단계의 통신 범위는 다음과 같다.
+
+```text
+Frontend Pod ── frontend Service ──┐
+                                   ├── 클러스터 내부 통신
+Backend Pod  ── fastcgi-backend ───┤
+                                   └── mariadb Service ── MariaDB Pod
+
+외부 브라우저 ──(아직 연결되지 않음)──> Ingress
+```
+
+외부 브라우저에서 접속하려면 11번에서 `IngressClass/nginx`와 Ingress
+Controller를 준비하고 `fastapi-ingress` 리소스를 적용해야 한다.
 
 ## 사전 조건
 
@@ -149,6 +167,9 @@ Frontend와 Backend의 ClusterIP는 다음 명령으로 확인한다.
 ```bash
 kubectl get service frontend fastcgi-backend mariadb -o wide
 ```
+
+이 단계에서는 ClusterIP를 이용한 클러스터 내부 연결만 확인한다. NodePort 주소나
+브라우저를 통한 외부 접근은 11번 Ingress 실습을 완료한 뒤 확인한다.
 
 ## 삭제
 

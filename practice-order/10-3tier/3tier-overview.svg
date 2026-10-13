@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1500" height="920" viewBox="0 0 1500 920" role="img" aria-labelledby="title desc">
   <title id="title">초기 이미지 기반 3-Tier 실습 구조</title>
-  <desc id="desc">3-Tier 실습의 Frontend와 Backend Deployment가 MariaDB StatefulSet과 Headless Service, nfs-csi PVC에 연결되는 구조</desc>
+  <desc id="desc">초기 이미지 기반 3-Tier 실습의 내부 통신 구조와, 외부 접근은 11번 Ingress 실습 이후 가능하다는 흐름을 보여준다.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#475569"/>
@@ -24,11 +24,11 @@
   <rect width="1500" height="920" fill="#ffffff"/>
   <text x="60" y="55" class="title">초기 이미지 기반 3-Tier 실습 구조</text>
   <text x="60" y="84" class="body">기준 manifest: k8s/practice-order/10-3tier/</text>
-  <text x="920" y="84" class="body">외부: 10.10.10.150~152:30198 → ingress-nginx</text>
+  <text x="920" y="84" class="body">외부 접근: 11번 Ingress 적용 후 가능</text>
 
   <rect x="50" y="120" width="1400" height="330" rx="20" class="tier"/>
-  <text x="80" y="160" class="heading">Ingress 라우팅과 애플리케이션 계층</text>
-  <text x="80" y="184" class="small">/api/ → fastcgi-backend:8000 · / → frontend:80</text>
+  <text x="80" y="160" class="heading">3-Tier 내부 계층과 다음 단계 Ingress</text>
+  <text x="80" y="184" class="small">현재: ClusterIP 내부 통신 · 외부 경로(/api/, /)는 11번에서 적용</text>
 
   <rect x="90" y="195" width="330" height="200" rx="16" class="frontend"/>
   <text x="120" y="238" class="heading">Frontend</text>
