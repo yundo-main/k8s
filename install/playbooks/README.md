@@ -23,7 +23,8 @@ install/
     ├── bootstrap.yml
     ├── control-plane.yml
     ├── workers.yml
-    └── addons/               # Addon별 Playbook
+    └── addons/               # Addon별 Playbook·통합 실행
+        └── all.yml           # Addon 실행 순서 조정
 ```
 
 ```text
@@ -162,7 +163,7 @@ ansible-playbook -i inventory/hosts.yml \
 
 Calico는 Worker 조인 전에 필요한 기본 CNI이므로 기본 설치에서는 이 단계에서
 실행한다. 기본 설치가 이미 끝난 클러스터에서 다른 Addon과 함께 다시 확인하려면
-`playbooks/addons.yml`을 사용할 수 있다.
+`playbooks/addons/all.yml`을 사용할 수 있다.
 
 ## 08. Worker 노드 조인
 

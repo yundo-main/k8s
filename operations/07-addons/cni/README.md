@@ -17,4 +17,4 @@ ansible-playbook -i install/inventory/hosts.yml \
   install/playbooks/addons/cni-calico.yml --ask-become-pass
 ```
 
-다른 Addon과 함께 재확인하려면 `install/playbooks/addons.yml`을 사용한다.
+다른 구성요소와 함께 재확인하려면 `install/playbooks/addons/all.yml`을 사용한다.

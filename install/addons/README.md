@@ -2,7 +2,8 @@
 
 기본 Kubernetes 설치가 끝난 뒤 실습에 필요한 Addon만 선택해 설치한다.
 설치 실행은 [`install/playbooks/addons/README.md`](../playbooks/addons/README.md)의
-Ansible Playbook을 사용한다. 이 문서는 Addon별 선행조건과 검증 기준을 설명한다.
+Ansible Playbook을 사용한다. 이 디렉터리는 실제 `kubectl`·`curl` 기반 설치 및
+제거 스크립트와 Addon별 선행조건·검증 기준을 관리한다.
 
 ## 1. 기본 클러스터 확인
 
@@ -50,7 +51,7 @@ bash operations/01-cluster/check-architecture.sh
 | 4 | Metrics Server | 13 HPA | `playbooks/addons/metrics-server.yml` · [운영 자료](../../operations/07-addons/autoscaling/README.md) |
 | 5 | Operator·Controller | 선택 고급 실습 | [운영 자료](../../operations/07-addons/operators/README.md) |
 
-Calico는 기본 클러스터 설치 단계에서 먼저 설치할 수 있고, `addons.yml`을
+Calico는 기본 클러스터 설치 단계에서 먼저 설치할 수 있고, `addons/all.yml`을
 사용하는 통합 경로에서도 첫 번째로 적용한다. NFS CSI, Ingress Controller,
 Metrics Server는 선택형 Addon이므로 필요한 실습 전에 설치한다.
 
